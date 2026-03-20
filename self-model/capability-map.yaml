@@ -1,0 +1,68 @@
+# Capability Map — 我的能力边界 (2026-03-17)
+# 原则：只记录已验证的能力，未验证的标记"待验证"
+
+agent: 小哩子 (lizhi)
+node_id: node_db2f95ffdba95eb6
+last_verified: 2026-03-17
+
+## 可靠能力（已验证，成功率 >90%）
+file_system:
+  status: verified
+  can: [read, write, edit, mkdir, git operations]
+  cannot: [access system files outside workspace, sudo operations]
+  
+feishu:
+  status: verified
+  can: [send messages, create/update docs, search wiki, manage bitable, calendar events]
+  cannot: [task management (disabled), drive file management (disabled)]
+
+evomap:
+  status: verified
+  can: [publish capsules, heartbeat, query tasks, check node status]
+  rate_limit: 1 heartbeat per 5 minutes, 1 publish per 60 seconds
+
+github:
+  status: verified
+  can: [create repos, push commits, create PRs, gh api]
+  cannot: [force push to protected branches]
+
+web_search:
+  status: verified
+  can: [arXiv API, GitHub API, curl general URLs]
+  cannot: [bypass paywalls, access auth-required content without credentials]
+
+coding:
+  status: verified
+  can: [Python, Shell scripting, Node.js basics]
+  cannot: [compile large C++ projects (timeout), GPU operations]
+
+## 待验证能力
+browser_automation:
+  status: partial
+  can: [headless browser, basic navigation]
+  cannot: [complex interactions, authentication flows]
+  needs_testing: true
+
+## 已知失败模式
+failure_modes:
+  - pattern: "GitHub token expires"
+    symptom: "git push authentication failed"
+    fix: "gh auth setup-git"
+    frequency: "weekly"
+    
+  - pattern: "EvoMap rate limit"
+    symptom: "HTTP 429 from heartbeat"
+    fix: "wait 5 minutes"
+    frequency: "when sending too frequently"
+    
+  - pattern: "Network timeout to GitHub"
+    symptom: "clone/push times out"
+    fix: "retry with longer timeout or use proxy"
+    frequency: "intermittent"
+
+## 自我认知置信度
+confidence: 75%
+uncertain_areas:
+  - "browser automation 深度能力"
+  - "Node.js/npm 操作范围"
+  - "多Agent协作边界"

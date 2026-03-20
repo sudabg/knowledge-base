@@ -1,0 +1,92 @@
+{
+  "version": "1.0",
+  "created": "2026-03-18T15:56:49.764611+08:00",
+  "strategies": {
+    "rate_limit_429": {
+      "id": "rate_limit_429",
+      "error_pattern": "429|rate.?limit|too many requests",
+      "category": "api_rate_limit",
+      "recovery_steps": [
+        "等待 10 秒后重试",
+        "连续 3 次失败后退避 60 秒",
+        "退避期间执行其他任务",
+        "记录限流频率，超过 10 次/日调整发布策略"
+      ],
+      "success_count": 0,
+      "last_applied": null,
+      "source": "seed"
+    },
+    "timeout_read": {
+      "id": "timeout_read",
+      "error_pattern": "Read timed out|read operation timed out",
+      "category": "api_timeout",
+      "recovery_steps": [
+        "检查目标服务是否在线（curl -s -o /dev/null -w '%{http_code}'）",
+        "增加超时时间（5s → 15s）",
+        "如果节点查询成功但操作超时，说明服务端处理慢，等待后重试",
+        "避免在同一端点连续超时 3 次"
+      ],
+      "success_count": 0,
+      "last_applied": null,
+      "source": "seed"
+    },
+    "server_busy_503": {
+      "id": "server_busy_503",
+      "error_pattern": "503|server_busy|Service Unavailable",
+      "category": "api_server",
+      "recovery_steps": [
+        "503 表示服务端过载，非本节点问题",
+        "等待 retry_after_ms 指定的时间",
+        "优先级低的发布操作延后 30 分钟",
+        "继续维持心跳（即使失败也不影响节点状态）"
+      ],
+      "success_count": 0,
+      "last_applied": null,
+      "source": "seed"
+    },
+    "json_decode_error": {
+      "id": "json_decode_error",
+      "error_pattern": "JSONDecodeError|Expecting value|invalid json",
+      "category": "data_parse",
+      "recovery_steps": [
+        "检查响应体是否为空或 HTML 错误页",
+        "打印前 200 字符诊断实际返回内容",
+        "如果是 rate limit HTML 页面，转用 rate_limit_429 策略",
+        "增加错误处理，检查 HTTP status code 再解析"
+      ],
+      "success_count": 0,
+      "last_applied": null,
+      "source": "seed"
+    },
+    "network_unreachable": {
+      "id": "network_unreachable",
+      "error_pattern": "network_frozen|Network.*unreachable|Connection.*refused",
+      "category": "network",
+      "recovery_steps": [
+        "检查网络连通性（ping 8.8.8.8）",
+        "检查 DNS 解析（nslookup evomap.ai）",
+        "尝试通过代理重试（如配置了 Xray）",
+        "记录故障时间，持续超过 10 分钟通知用户"
+      ],
+      "success_count": 0,
+      "last_applied": null,
+      "source": "seed"
+    },
+    "file_not_found": {
+      "id": "file_not_found",
+      "error_pattern": "FileNotFoundError|No such file",
+      "category": "filesystem",
+      "recovery_steps": [
+        "检查文件路径是否正确（可能用了错误的工作目录）",
+        "使用绝对路径而非相对路径",
+        "如果需要创建文件，先确保父目录存在（mkdir -p）",
+        "检查文件是否被 git clean 或 mv 移走"
+      ],
+      "success_count": 0,
+      "last_applied": null,
+      "source": "seed"
+    }
+  },
+  "recovery_log": [],
+  "updated": "2026-03-18T16:00:49.184350+08:00"
+}

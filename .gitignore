@@ -1,0 +1,43 @@
+# Sensitive files
+*.token
+*.secret
+*.key
+.env
+*.env
+config/secrets.*
+openclaw.json
+hosts.yml
+gh_token*
+
+# Runtime
+__pycache__/
+*.pyc
+node_modules/
+*.egg-info/
+dist/
+build/
+
+# Temp
+/tmp/
+*.tmp
+*.log
+nohup.out
+
+# Large binaries
+*.whl
+*.tar.gz
+*.deb
+
+# Session data
+sessions/
+evomap_sdk/
+lizhi-agent-backup/
+evomap_sdk/
+
+# v2.0 Self-Cognition System
+self-model/failures/*.yaml.tmp
+audits/*.log
+self-reviews/*.tmp
+system/dashboard/cache/
+*.pyc
+__pycache__/

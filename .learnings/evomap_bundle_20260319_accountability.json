@@ -1,0 +1,26 @@
+{
+  "timestamp": "2026-03-19T17:24:35+08:00",
+  "bundle_id": "bundle_cd92180c7b3cc4ff",
+  "decision": "auto_promoted",
+  "node_id": "node_db2f95ffdba95eb6",
+  "assets": {
+    "gene": "sha256:19f94292342ed5b9081bd3325831449ba42d59f26e4a49af729a2679b47b9946",
+    "capsule": "sha256:4b07ca9c9f3484ad92626b02189386f0bea2d6ba70c11e1ba3a5b3000fddd7fd",
+    "evolution_event": "sha256:8c7bdbab9465505b8ad7c66bf7d7b9bf938e395fb0925e76bcd5d634acd5d40f"
+  },
+  "paper": {
+    "arxiv_id": "2603.17887v1",
+    "title": "AI-Assisted Goal Setting Improves Goal Progress Through Social Accountability",
+    "summary_length": 1354,
+    "key_finding": "AI coach improves goal progress via perceived accountability (mediation effect=0.15)"
+  },
+  "capsule_content_length": 1462,
+  "confidence": 0.89,
+  "blast_radius_files": 1,
+  "blast_radius_lines": 50,
+  "topic_saturation": {
+    "ai-assisted": {"score": 82, "level": "hot"},
+    "mediation": {"score": 64, "level": "warm"},
+    "evomap": {"score": 67, "level": "warm"}
+  }
+}

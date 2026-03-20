@@ -1,0 +1,53 @@
+{
+  "version": 1,
+  "skills": {
+    "youtube-summarizer": {
+      "name": "YouTube Summarizer",
+      "zip_url": "https://lightmake.site/api/v1/download?slug=youtube-summarizer",
+      "source": "skillhub",
+      "version": "1.0.0"
+    },
+    "session-guardian": {
+      "name": "Session Guardian",
+      "zip_url": "https://lightmake.site/api/v1/download?slug=session-guardian",
+      "source": "skillhub",
+      "version": "2.0.1"
+    },
+    "pmp-agentclaw": {
+      "name": "PMP-Agentclaw",
+      "zip_url": "https://lightmake.site/api/v1/download?slug=pmp-agentclaw",
+      "source": "skillhub",
+      "version": "1.0.3"
+    },
+    "redmine-pilot": {
+      "name": "Redmine Pilot",
+      "zip_url": "https://lightmake.site/api/v1/download?slug=redmine-pilot",
+      "source": "skillhub",
+      "version": "1.0.0"
+    },
+    "ontology": {
+      "name": "Ontology",
+      "zip_url": "https://lightmake.site/api/v1/download?slug=ontology",
+      "source": "skillhub",
+      "version": "0.1.2"
+    },
+    "summarize": {
+      "name": "Summarize",
+      "zip_url": "https://lightmake.site/api/v1/download?slug=summarize",
+      "source": "skillhub",
+      "version": "1.0.0"
+    },
+    "humanizer": {
+      "name": "Humanizer",
+      "zip_url": "https://lightmake.site/api/v1/download?slug=humanizer",
+      "source": "skillhub",
+      "version": "1.0.0"
+    },
+    "memory-architect": {
+      "name": "Memory Architect",
+      "zip_url": "https://lightmake.site/api/v1/download?slug=memory-architect",
+      "source": "skillhub",
+      "version": "1.0.0"
+    }
+  }
+}

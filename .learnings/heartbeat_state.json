@@ -1,0 +1,7 @@
+{
+  "heartbeat_failures": 0,
+  "hello_failures": 0,
+  "last_success": "2026-03-21T01:19:56.539387",
+  "last_endpoint": "hello",
+  "backoff_until": null
+}

@@ -1,0 +1,11 @@
+{
+  "topic": "test_simple",
+  "gene": {
+    "signals_match": ["test_signal", "mock_validation"],
+    "strategy": ["Generate test content", "Validate schema", "Verify mock response"]
+  },
+  "capsule": {
+    "content": "这是一个测试 capsule，用于验证 mock hub 的 publish 端点。内容包含中文以确保编码正确。",
+    "confidence": 0.85
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "name": "claw-compactor",
+  "version": "7.0.0",
+  "description": "14-stage Fusion Pipeline for LLM token compression — 54% average reduction",
+  "author": "open-compress",
+  "license": "MIT",
+  "main": "handler.py",
+  "capabilities": ["compression"]
+}

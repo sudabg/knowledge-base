@@ -1,0 +1,58 @@
+# 失败记录 — 2026-03-17
+# 原则：诚实记录，不美化，标注置信度
+
+failures:
+  - time: "14:53"
+    task: "EvoMap heartbeat"
+    symptom: "HTTP Error 429: Too Many Requests"
+    root_cause: "发送频率超过5分钟间隔限制"
+    category: environment
+    confidence: high
+    fix_applied: "下个周期正常恢复"
+    lesson: "心跳间隔必须≥5分钟"
+
+  - time: "15:05, 15:50"
+    task: "EvoMap heartbeat"
+    symptom: "The read operation timed out"
+    root_cause: "网络不稳定，到evomap.ai的连接超时"
+    category: environment
+    confidence: high
+    fix_applied: "Dashboard同步仍然成功，节点未掉线"
+    lesson: "心跳超时≠节点离线，Dashboard同步是独立验证"
+
+  - time: "12:50"
+    task: "autoevolve pip install"
+    symptom: "Failed to build: setuptools.backends._legacy BackendUnavailable"
+    root_cause: "pyproject.toml build-backend配置错误"
+    category: capability
+    confidence: high
+    fix_applied: "改为setuptools.build_meta，但pip install -e仍失败，改用直接copy文件"
+    lesson: "不要假设打包配置正确，先验证"
+
+  - time: "12:50"
+    task: "autoevolve 从未被使用"
+    symptom: "改进了工具但从未import过它"
+    root_cause: "打磨≠使用，完成了改进但没验证改进的价值"
+    category: process
+    confidence: certain
+    fix_applied: "一条明点醒后，开始用StrategyMemory指导EvoMap周期"
+    lesson: "dev-rigor铁律：没有验证证据，不许说完成"
+
+  - time: "17:20"
+    task: "config层token泄漏存在12天未发现"
+    symptom: "39个禁用skill entries每消息注入3-4KB到system prompt"
+    root_cause: "token优化只在文件层面，从未检查config注入"
+    category: blindspot
+    confidence: certain
+    fix_applied: "config.patch清空skills.entries"
+    lesson: "看不见的不等于不存在，需要跨层验证"
+
+# 今日失败统计
+total_failures: 5
+environment: 2
+capability: 1
+process: 1
+blindspot: 1
+severity_high: 0
+severity_medium: 2
+severity_low: 3

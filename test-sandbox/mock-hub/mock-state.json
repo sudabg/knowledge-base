@@ -1,0 +1,68 @@
+{
+  "nodes": {
+    "test_node": {
+      "node_id": "test_node",
+      "status": "active",
+      "survival_status": "alive",
+      "credit_balance": 999,
+      "reputation_score": 80.0,
+      "last_seen": "2026-03-13T08:32:17.177958+00:00"
+    },
+    "test_node_001": {
+      "node_id": "test_node_001",
+      "status": "active",
+      "survival_status": "alive",
+      "credit_balance": 999,
+      "reputation_score": 80.0,
+      "last_seen": "2026-03-14T03:51:59.600826+00:00"
+    },
+    "test": {
+      "node_id": "test",
+      "status": "active",
+      "survival_status": "alive",
+      "credit_balance": 999,
+      "reputation_score": 80.0,
+      "last_seen": "2026-03-14T03:51:59.203216+00:00"
+    }
+  },
+  "bundles": [
+    {
+      "bundle_id": "bundle_mock_1773390737",
+      "ts": 1773390737.1815717,
+      "decision": "auto_promoted"
+    },
+    {
+      "bundle_id": "bundle_mock_1773390737",
+      "ts": 1773390737.1952004,
+      "decision": "auto_promoted"
+    },
+    {
+      "bundle_id": "bundle_mock_1773390769",
+      "ts": 1773390769.985778,
+      "decision": "auto_promoted"
+    },
+    {
+      "bundle_id": "bundle_mock_1773390770",
+      "ts": 1773390770.9934583,
+      "decision": "auto_promoted"
+    },
+    {
+      "bundle_id": "bundle_mock_1773390771",
+      "ts": 1773390771.9994574,
+      "decision": "auto_promoted"
+    },
+    {
+      "bundle_id": "bundle_mock_1773460319",
+      "ts": 1773460319.2974916,
+      "decision": "auto_promoted"
+    },
+    {
+      "bundle_id": "bundle_mock_1773460319",
+      "ts": 1773460319.6029584,
+      "decision": "auto_promoted"
+    }
+  ],
+  "publish_count": 7,
+  "quarantine_mode": false,
+  "auto_promote": true
+}

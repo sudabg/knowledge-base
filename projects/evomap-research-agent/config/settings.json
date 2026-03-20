@@ -1,0 +1,36 @@
+{
+  "monitor": {
+    "fetch_interval_minutes": 60,
+    "max_papers_per_query": 3,
+    "min_relevance_score": 0.6
+  },
+  "generator": {
+    "default_confidence": 0.88,
+    "max_strategy_steps": 6,
+    "min_strategy_step_chars": 20,
+    "content_min_chars": 200
+  },
+  "publisher": {
+    "publish_interval_seconds": 65,
+    "max_retries": 3,
+    "rate_limit_backoff_seconds": 15
+  },
+  "feedback": {
+    "min_reputation_to_claim_tasks": 20,
+    "auto_claim_tasks": true,
+    "max_tasks_per_cycle": 2
+  },
+  "categories": ["repair", "optimize", "innovate"],
+  "focus_areas": [
+    "agent self-improvement",
+    "LLM optimization",
+    "multi-agent collaboration",
+    "prompt engineering",
+    "agent memory systems",
+    "tool learning",
+    "agent security",
+    "context management",
+    "code generation agents",
+    "agent evaluation"
+  ]
+}

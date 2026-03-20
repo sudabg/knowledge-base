@@ -1,0 +1,327 @@
+[
+  {
+    "timestamp": "2026-03-18T15:56:43.997511+08:00",
+    "trials": 1,
+    "tests": {
+      "T01_memory_search": {
+        "name": "Memory 文件完整性",
+        "category": "memory",
+        "runs": [
+          {
+            "passed": true,
+            "time_ms": 0.4
+          }
+        ],
+        "pass": true
+      },
+      "T02_chronos_index": {
+        "name": "Chronos 索引可用",
+        "category": "memory",
+        "runs": [
+          {
+            "passed": true,
+            "time_ms": 1.4
+          }
+        ],
+        "pass": true
+      },
+      "T03_daily_log_exists": {
+        "name": "今日日志存在",
+        "category": "logging",
+        "runs": [
+          {
+            "passed": true,
+            "time_ms": 0.0
+          }
+        ],
+        "pass": true
+      },
+      "T04_project_plans": {
+        "name": "项目计划文件存在",
+        "category": "project",
+        "runs": [
+          {
+            "passed": true,
+            "time_ms": 0.4
+          }
+        ],
+        "pass": true
+      },
+      "T05_dashboard_api": {
+        "name": "Dashboard API 响应",
+        "category": "dashboard",
+        "runs": [
+          {
+            "passed": true,
+            "time_ms": 33.2
+          }
+        ],
+        "pass": true
+      },
+      "T06_dashboard_node": {
+        "name": "Dashboard 节点数据",
+        "category": "dashboard",
+        "runs": [
+          {
+            "passed": false,
+            "error": "timed out",
+            "time_ms": 5005.8
+          }
+        ],
+        "pass": false
+      },
+      "T07_dashboard_projects": {
+        "name": "Dashboard 项目数据",
+        "category": "dashboard",
+        "runs": [
+          {
+            "passed": true,
+            "time_ms": 669.0
+          }
+        ],
+        "pass": true
+      },
+      "T08_git_repo": {
+        "name": "Git 仓库正常",
+        "category": "system",
+        "runs": [
+          {
+            "passed": true,
+            "time_ms": 0.1
+          }
+        ],
+        "pass": true
+      },
+      "T09_learnings_file": {
+        "name": "学习记录存在",
+        "category": "learning",
+        "runs": [
+          {
+            "passed": true,
+            "time_ms": 0.6
+          }
+        ],
+        "pass": true
+      },
+      "T10_heartbeat_cache": {
+        "name": "心跳缓存新鲜",
+        "category": "evomap",
+        "runs": [
+          {
+            "passed": true,
+            "time_ms": 0.3
+          }
+        ],
+        "pass": true
+      }
+    },
+    "summary": {
+      "total": 10,
+      "passed": 9,
+      "failed": 1,
+      "score": 90.0
+    }
+  },
+  {
+    "timestamp": "2026-03-18T16:00:38.452574+08:00",
+    "trials": 3,
+    "tests": {
+      "T01_memory_search": {
+        "name": "Memory 文件完整性",
+        "category": "memory",
+        "runs": [
+          {
+            "passed": true,
+            "time_ms": 0.5
+          },
+          {
+            "passed": true,
+            "time_ms": 0.4
+          },
+          {
+            "passed": true,
+            "time_ms": 0.4
+          }
+        ],
+        "pass": true
+      },
+      "T02_chronos_index": {
+        "name": "Chronos 索引可用",
+        "category": "memory",
+        "runs": [
+          {
+            "passed": true,
+            "time_ms": 1.4
+          },
+          {
+            "passed": true,
+            "time_ms": 1.3
+          },
+          {
+            "passed": true,
+            "time_ms": 1.3
+          }
+        ],
+        "pass": true
+      },
+      "T03_daily_log_exists": {
+        "name": "今日日志存在",
+        "category": "logging",
+        "runs": [
+          {
+            "passed": true,
+            "time_ms": 0.0
+          },
+          {
+            "passed": true,
+            "time_ms": 0.0
+          },
+          {
+            "passed": true,
+            "time_ms": 0.0
+          }
+        ],
+        "pass": true
+      },
+      "T04_project_plans": {
+        "name": "项目计划文件存在",
+        "category": "project",
+        "runs": [
+          {
+            "passed": true,
+            "time_ms": 0.4
+          },
+          {
+            "passed": true,
+            "time_ms": 0.3
+          },
+          {
+            "passed": true,
+            "time_ms": 0.7
+          }
+        ],
+        "pass": true
+      },
+      "T05_dashboard_api": {
+        "name": "Dashboard API 响应",
+        "category": "dashboard",
+        "runs": [
+          {
+            "passed": true,
+            "time_ms": 36.1
+          },
+          {
+            "passed": true,
+            "time_ms": 0.7
+          },
+          {
+            "passed": true,
+            "time_ms": 1.8
+          }
+        ],
+        "pass": true
+      },
+      "T06_dashboard_node": {
+        "name": "Dashboard 节点数据",
+        "category": "dashboard",
+        "runs": [
+          {
+            "passed": true,
+            "time_ms": 4687.9
+          },
+          {
+            "passed": true,
+            "time_ms": 1625.6
+          },
+          {
+            "passed": true,
+            "time_ms": 4315.0
+          }
+        ],
+        "pass": true
+      },
+      "T07_dashboard_projects": {
+        "name": "Dashboard 项目数据",
+        "category": "dashboard",
+        "runs": [
+          {
+            "passed": true,
+            "time_ms": 1.9
+          },
+          {
+            "passed": true,
+            "time_ms": 2.2
+          },
+          {
+            "passed": true,
+            "time_ms": 1.5
+          }
+        ],
+        "pass": true
+      },
+      "T08_git_repo": {
+        "name": "Git 仓库正常",
+        "category": "system",
+        "runs": [
+          {
+            "passed": true,
+            "time_ms": 0.1
+          },
+          {
+            "passed": true,
+            "time_ms": 0.1
+          },
+          {
+            "passed": true,
+            "time_ms": 0.1
+          }
+        ],
+        "pass": true
+      },
+      "T09_learnings_file": {
+        "name": "学习记录存在",
+        "category": "learning",
+        "runs": [
+          {
+            "passed": true,
+            "time_ms": 0.4
+          },
+          {
+            "passed": true,
+            "time_ms": 0.5
+          },
+          {
+            "passed": true,
+            "time_ms": 0.5
+          }
+        ],
+        "pass": true
+      },
+      "T10_heartbeat_cache": {
+        "name": "心跳缓存新鲜",
+        "category": "evomap",
+        "runs": [
+          {
+            "passed": true,
+            "time_ms": 0.2
+          },
+          {
+            "passed": true,
+            "time_ms": 0.3
+          },
+          {
+            "passed": true,
+            "time_ms": 0.2
+          }
+        ],
+        "pass": true
+      }
+    },
+    "summary": {
+      "total": 10,
+      "passed": 10,
+      "failed": 0,
+      "score": 100.0
+    }
+  }
+]

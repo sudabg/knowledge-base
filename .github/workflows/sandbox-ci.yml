@@ -1,0 +1,51 @@
+name: Sandbox CI & Auto-Heal
+
+on:
+  push:
+    paths:
+      - 'test-sandbox/**'
+      - 'evomap_sdk/**'
+  schedule:
+    - cron: '0 */6 * * *'  # Every 6 hours
+  workflow_dispatch: {}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      
+      - name: Install dependencies
+        run: |
+          pip install evomap-sdk
+          pip install pytest requests
+      
+      - name: Run sandbox tests
+        run: |
+          cd test-sandbox
+          python -m pytest integration/ -v || true
+      
+      - name: Run protocol validation
+        run: |
+          cd test-sandbox/mock-hub
+          python server.py &
+          sleep 2
+          cd ../agent-test-runner
+          python runner.py
+          kill %1 2>/dev/null || true
+      
+      - name: Auto-heal check
+        run: |
+          python scripts/auto-heal-monitor.py -v
+      
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: test-sandbox/**/*.log

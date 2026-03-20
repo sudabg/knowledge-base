@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🦞 小哩子 Evolution Dashboard</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Inter:wght@300;400;500;600;700&display=swap');
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Inter', sans-serif; background: #0a0a0f; color: #e0e0e0; min-height: 100vh; overflow-x: hidden; }
+.bg-grid { position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+  background-image: radial-gradient(circle at 25% 25%, rgba(255, 107, 53, 0.05) 0%, transparent 50%),
+                    radial-gradient(circle at 75% 75%, rgba(138, 43, 226, 0.05) 0%, transparent 50%);
+  z-index: 0; }
+.bg-grid::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.02'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); }
+.glass { background: rgba(255,255,255,0.03); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 16px; transition: all 0.3s ease; }
+.glass:hover { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1); transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
+.glow-orange { box-shadow: 0 0 40px rgba(255, 107, 53, 0.15); }
+.glow-purple { box-shadow: 0 0 40px rgba(138, 43, 226, 0.15); }
+.glow-green { box-shadow: 0 0 40px rgba(16, 185, 129, 0.15); }
+.text-gradient { background: linear-gradient(135deg, #ff6b35, #8a2be2, #06b6d4); 
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+@keyframes pulse-glow { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+.pulse { animation: pulse-glow 2s ease-in-out infinite; }
+@keyframes progress-fill { from { width: 0; } }
+.progress-animate { animation: progress-fill 1.5s ease-out; }
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: rgba(255,255,255,0.02); }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+.status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+.status-active { background: #10b981; box-shadow: 0 0 8px #10b981; }
+@keyframes lobster-bounce { 0%, 100% { transform: translateY(0) rotate(0deg); } 25% { transform: translateY(-5px) rotate(-5deg); } 75% { transform: translateY(-3px) rotate(5deg); } }
+.lobster { display: inline-block; animation: lobster-bounce 3s ease-in-out infinite; font-size: 28px; }
+.fade-in { animation: fadeIn 0.5s ease-out; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+</head>
+<body>
+<div class="bg-grid"></div>
+
+<header class="relative z-10 border-b border-white/5 px-8 py-5">
+  <div class="max-w-7xl mx-auto flex items-center justify-between">
+    <div class="flex items-center gap-4">
+      <span class="lobster">🦞</span>
+      <div>
+        <h1 class="text-2xl font-bold text-gradient">小哩子 Evolution Dashboard</h1>
+        <p class="text-xs text-white/40 mt-0.5">Real-time Agent Monitoring & Project Tracking</p>
+      </div>
+    </div>
+    <div class="flex items-center gap-6">
+      <div class="text-right">
+        <div class="text-xs text-white/40">System Time</div>
+        <div id="clock" class="text-sm font-mono text-white/80">--:--:--</div>
+      </div>
+      <div class="text-right">
+        <div class="text-xs text-white/40">Last Refresh</div>
+        <div id="last-refresh" class="text-sm font-mono text-white/60">--:--:--</div>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="status-dot status-active pulse"></span>
+        <span class="text-sm text-emerald-400">Online</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="relative z-10 max-w-7xl mx-auto px-8 py-8">
+  <!-- Top Stats Row -->
+  <div class="grid grid-cols-4 gap-6 mb-8">
+    <div class="glass glow-green p-6">
+      <div class="flex items-center justify-between mb-4">
+        <span class="text-xs text-white/40 uppercase tracking-wider">Node Status</span>
+        <span id="status-badge" class="text-emerald-400 text-xs font-medium px-2 py-0.5 rounded-full bg-emerald-400/10">Active</span>
+      </div>
+      <div class="text-3xl font-bold text-white mb-1" id="reputation">--</div>
+      <div class="text-xs text-white/40">Reputation Score</div>
+      <div class="mt-3 h-1 bg-white/5 rounded-full overflow-hidden">
+        <div id="reputation-bar" class="h-full bg-gradient-to-r from-emerald-500 to-cyan-500 progress-animate" style="width: 0%"></div>
+      </div>
+    </div>
+    <div class="glass glow-orange p-6">
+      <div class="flex items-center justify-between mb-4">
+        <span class="text-xs text-white/40 uppercase tracking-wider">Published</span>
+        <span class="text-orange-400 text-lg">📦</span>
+      </div>
+      <div class="text-3xl font-bold text-white mb-1" id="published">--</div>
+      <div class="text-xs text-white/40">Total Capsules</div>
+      <div class="mt-3 flex gap-1" id="pub-stats">
+        <span class="text-xs text-emerald-400" id="promoted-count">↑ promoted</span>
+        <span class="text-xs text-white/30">|</span>
+        <span class="text-xs text-red-400" id="rejected-count">0 rejected</span>
+      </div>
+    </div>
+    <div class="glass glow-purple p-6">
+      <div class="flex items-center justify-between mb-4">
+        <span class="text-xs text-white/40 uppercase tracking-wider">Credit Balance</span>
+        <span class="text-purple-400 text-lg">⚡</span>
+      </div>
+      <div class="text-3xl font-bold text-white mb-1" id="credit">--</div>
+      <div class="text-xs text-white/40">Quarantine: <span id="quarantine" class="text-amber-400">--</span></div>
+      <div class="mt-3 text-xs text-white/30" id="penalty-info">Recovery in progress...</div>
+    </div>
+    <div class="glass p-6">
+      <div class="flex items-center justify-between mb-4">
+        <span class="text-xs text-white/40 uppercase tracking-wider">Available Tasks</span>
+        <span class="text-cyan-400 text-lg">🎯</span>
+      </div>
+      <div class="text-3xl font-bold text-white mb-1" id="tasks">--</div>
+      <div class="text-xs text-white/40">Active tasks in pool</div>
+      <div class="mt-3 text-xs text-cyan-400" id="highest-bounty">--</div>
+    </div>
+  </div>
+
+  <!-- Top: Today's Task List -->
+  <div class="mb-8 glass p-6">
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="font-semibold text-white text-sm flex items-center gap-2">
+        <span>📝</span> 今日待办 (动态)
+      </h3>
+      <div class="text-xs">
+        <span class="text-emerald-400" id="today-done">0 已完成</span>
+        <span class="text-white/30 mx-2">|</span>
+        <span class="text-orange-400" id="today-pending">0 待办</span>
+      </div>
+    </div>
+    <div id="today-tasks" class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+      <!-- Tasks will be injected here -->
+    </div>
+  </div>
+
+  <!-- Middle Row: Projects + Today's Activity (Dynamic) -->
+  <div class="grid grid-cols-3 gap-6 mb-8" id="projects-grid">
+    <div class="glass p-6 col-span-3 text-center text-white/30 text-xs py-8">Loading projects...</div>
+  </div>
+  <!-- bottom: ... existing code -->
+
+  <!-- Completed Projects Archive (collapsed by default) -->
+  <div class="mb-8">
+    <button onclick="toggleCompleted()" class="flex items-center gap-2 text-xs text-white/30 hover:text-white/60 transition-colors mb-2">
+      <span id="completed-arrow">▶</span>
+      <span>📋 已完成项目档案 (P.md)</span>
+      <span id="completed-count" class="text-emerald-400/60"></span>
+    </button>
+    <div id="completed-section" class="hidden glass p-4 max-h-48 overflow-y-auto">
+      <div class="text-xs text-white/30" id="completed-content">Loading...</div>
+    </div>
+  </div>
+
+  <!-- Bottom Row: Today's Log + Recent Published -->
+  <div class="grid grid-cols-5 gap-6">
+    <div class="col-span-3 glass p-6">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="font-semibold text-white text-sm flex items-center gap-2">
+          <span>📋</span> 今日活动时间线 <span class="text-xs text-white/30 font-normal" id="today-date"></span>
+        </h3>
+        <div class="flex gap-3 text-xs" id="activity-summary">
+          <span class="text-emerald-400">-- 成功</span>
+          <span class="text-red-400">-- 失败</span>
+          <span class="text-white/30">共 -- 条</span>
+        </div>
+      </div>
+      <div class="space-y-4 max-h-[28rem] overflow-y-auto pr-2" id="activity-feed">
+        <div class="text-xs text-white/30 text-center py-4">Loading...</div>
+      </div>
+    </div>
+    <div class="col-span-2 glass p-6">
+      <h3 class="font-semibold text-white text-sm mb-4 flex items-center gap-2">
+        <span>📡</span> 节点详情 <span class="text-xs text-white/30 font-normal" id="node-time"></span>
+      </h3>
+      <div id="node-details" class="space-y-2 text-xs">
+        <div class="text-white/30 text-center py-4">Loading...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Resource Discovery Section -->
+  <div class="mt-6 glass p-6" id="resources-section">
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="font-semibold text-white text-sm flex items-center gap-2">
+        <span>🔍</span> 今日发现资源 <span class="text-xs text-white/30 font-normal" id="resources-count">(0)</span>
+      </h3>
+      <a href="https://tcnyzpcts10k.feishu.cn/base/Z2lqb8s6waIQi7s90BdcV64SnGh" target="_blank" class="text-xs text-orange-400/80 hover:text-orange-300">看板 →</a>
+    </div>
+    <div id="resources-list" class="space-y-2 max-h-64 overflow-y-auto">
+      <div class="text-xs text-white/30 text-center py-2">Loading...</div>
+    </div>
+  </div>
+</main>
+
+<footer class="relative z-10 border-t border-white/5 px-8 py-4 mt-8">
+  <div class="max-w-7xl mx-auto flex items-center justify-between text-xs text-white/30">
+    <span>🦞 小哩子 · EvoMap Node: node_db2f95ffdba95eb6</span>
+    <span>Powered by OpenClaw + EvoMap + SkillHub</span>
+  </div>
+</footer>
+
+<script>
+// Clock
+function updateClock() {
+  const now = new Date();
+  document.getElementById('clock').textContent = now.toLocaleTimeString('zh-CN', { hour12: false });
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+function esc(s) { return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+async function refreshData() {
+  try {
+    const [status, node, projects, memory] = await Promise.all([
+      fetch('/api/status').then(r => r.json()),
+      fetch('/api/node').then(r => r.json()),
+      fetch('/api/projects').then(r => r.json()).catch(() => ({})),
+      fetch('/api/memory').then(r => r.json()).catch(() => ({}))
+    ]);
+
+    const now = new Date();
+    document.getElementById('last-refresh').textContent = now.toLocaleTimeString('zh-CN', { hour12: false });
+
+    // Load today's tasks first
+    try {
+      const todayResp = await fetch('/api/today').then(r => r.json());
+      const todayData = todayResp;
+      const todayTasks = document.getElementById('today-tasks');
+      if (todayData && todayData.total > 0) {
+        todayTasks.innerHTML = todayData.tasks.map(t => {
+          const doneColor = t.done ? 'bg-emerald-500/10 border-emerald-500/30' : 'bg-white/5 border-white/5';
+          const doneText = t.done ? 'text-emerald-400' : 'text-white/60';
+          const check = t.done ? '✓' : '○';
+          const id = t.id || '';
+          const rawDesc = t.text.replace(/^(- \[[ x]\] )?/, '').trim();
+          const desc = rawDesc.substring(0, 55) + (rawDesc.length > 55 ? '...' : '');
+          const full = rawDesc;
+          return `<div title="${esc(full)}" class="p-3 rounded-lg border ${doneColor} hover:bg-white/10 transition-colors cursor-default">
+            <div class="flex items-start justify-between gap-2 mb-1">
+              <span class="text-xs font-mono text-cyan-300/80">${esc(id)}</span>
+              <span class="${doneText} text-lg">${check}</span>
+            </div>
+            <div class="text-xs leading-relaxed ${doneText}">${esc(desc)}</div>
+          </div>`;
+        }).join('');
+        document.getElementById('today-done').textContent = `${todayData.done} 已完成`;
+        document.getElementById('today-pending').textContent = `${todayData.pending} 待办`;
+      } else {
+        todayTasks.innerHTML = '<div class="col-span-4 text-xs text-white/30 text-center py-2">暂无今日任务</div>';
+      }
+    } catch(e) { console.log('Today tasks load error:', e); }
+
+    // Update stats from node data
+    document.getElementById('reputation').textContent = node.reputation_score || '--';
+    document.getElementById('published').textContent = node.total_published || '--';
+    document.getElementById('credit').textContent = node.credit ?? node.credit_balance ?? '--';
+    document.getElementById('tasks').textContent = node.tasks_count || '--';
+    const hb = node.highest_bounty || (node.available_tasks && node.available_tasks.length > 0 ? Math.max(...node.available_tasks.map(t => t.bounty || 0)) : 0);
+    document.getElementById('highest-bounty').textContent = hb > 0 ? `最高赏金: ${hb} credit` : '';
+    document.getElementById('quarantine').textContent = (node.quarantine_strikes || 0) + ' strike';
+    document.getElementById('promoted-count').textContent = '↑ ' + (node.total_promoted || 0) + ' promoted';
+    document.getElementById('rejected-count').textContent = (node.total_rejected || 0) + ' rejected';
+    // Add pending count if there's a gap (replace, not append)
+    const pending = (node.total_published || 0) - (node.total_promoted || 0) - (node.total_rejected || 0);
+    document.getElementById('pub-stats').innerHTML = `
+      <span class="text-xs text-emerald-400" id="promoted-count">↑ ${(node.total_promoted || 0)} promoted</span>
+      <span class="text-xs text-white/30">|</span>
+      <span class="text-xs text-red-400" id="rejected-count">${(node.total_rejected || 0)} rejected</span>
+      ${pending > 0 ? `<span class="text-xs text-white/30">|</span><span class="text-xs text-amber-400">⏳ ${pending} pending</span>` : ''}`;
+    document.getElementById('penalty-info').textContent = 'Penalty: ' + (node.reputation_penalty || 0) + ' | ' + (node.survival || '--');
+
+    // Rep bar
+    const rep = node.reputation_score || 0;
+    document.getElementById('reputation-bar').style.width = Math.min(rep, 100) + '%';
+
+    // Status badge
+    const badge = document.getElementById('status-badge');
+    if (node.status === 'active') {
+      badge.textContent = 'Active';
+      badge.className = 'text-emerald-400 text-xs font-medium px-2 py-0.5 rounded-full bg-emerald-400/10';
+    } else {
+      badge.textContent = node.status || 'Unknown';
+      badge.className = 'text-amber-400 text-xs font-medium px-2 py-0.5 rounded-full bg-amber-400/10';
+    }
+
+    // Today's date
+    const dateStr = now.toISOString().split('T')[0];
+    document.getElementById('today-date').textContent = dateStr;
+
+    // Load structured activities
+    try {
+      const actResp = await fetch('/api/activities').then(r => r.json());
+      const actData = actResp.groups ? actResp : { groups: [], total: 0, successes: 0, errors: 0 };
+      const feed = document.getElementById('activity-feed');
+
+      // Update summary - show full breakdown
+      const tc = actData.type_counts || {};
+      const summaryHtml = [];
+      if (tc.success) summaryHtml.push(`<span class="text-emerald-400">✅ ${tc.success}</span>`);
+      if (tc.error) summaryHtml.push(`<span class="text-red-400">❌ ${tc.error}</span>`);
+      if (tc.normal) summaryHtml.push(`<span class="text-white/50">📝 ${tc.normal}</span>`);
+      if (tc.summary) summaryHtml.push(`<span class="text-cyan-400">📋 ${tc.summary}</span>`);
+      if (tc.warning) summaryHtml.push(`<span class="text-amber-400">⚠️ ${tc.warning}</span>`);
+      if (tc.heartbeat) summaryHtml.push(`<span class="text-white/30">💓 ${tc.heartbeat}</span>`);
+      const totalCount = Object.values(tc).reduce((a, b) => a + b, 0);
+      summaryHtml.push(`<span class="text-white/30">共 ${totalCount} 条</span>`);
+      document.getElementById('activity-summary').innerHTML = summaryHtml.join('\n');
+
+      if (actData.groups && actData.groups.length > 0) {
+        let lastPeriod = '';
+        const periodLabels = { morning: '🌅 上午', afternoon: '🌤️ 下午', evening: '🌆 傍晚' };
+        const periodColors = { morning: 'orange', afternoon: 'cyan', evening: 'purple' };
+
+        feed.innerHTML = actData.groups.map(g => {
+          let periodDivider = '';
+          if (g.period && g.period !== lastPeriod) {
+            lastPeriod = g.period;
+            const pc = periodColors[g.period] || 'white';
+            periodDivider = `<div class="flex items-center gap-3 my-4">
+              <div class="h-px flex-1 bg-gradient-to-r from-transparent via-${pc}-500/30 to-transparent"></div>
+              <span class="text-xs text-${pc}-400/80 font-medium">${periodLabels[g.period] || ''}</span>
+              <div class="h-px flex-1 bg-gradient-to-r from-transparent via-${pc}-500/30 to-transparent"></div>
+            </div>`;
+          }
+
+          const typeColors = { success: 'emerald', error: 'red', warning: 'amber', heartbeat: 'white/40', normal: 'white/60', summary: 'cyan' };
+          const typeIcons = { success: '✓', error: '✗', warning: '⚠', heartbeat: '♥', normal: '·', summary: '⋯' };
+          const dotColors = { success: 'bg-emerald-400', error: 'bg-red-400', warning: 'bg-amber-400', heartbeat: 'bg-white/20', normal: 'bg-white/20', summary: 'bg-cyan-400/50' };
+
+          return `${periodDivider}
+          <div class="fade-in group">
+            <div class="flex items-center gap-2 mb-1.5">
+              <span class="text-[10px] font-mono text-cyan-300/80 bg-cyan-500/10 px-1.5 py-0.5 rounded">${esc(g.time)}</span>
+              ${g.title ? '<span class="text-[11px] text-white/40 truncate">' + esc(g.title) + '</span>' : ''}
+            </div>
+            <div class="space-y-0.5 ml-1 border-l border-white/[0.04] pl-3">
+              ${g.items.map(i => {
+                const c = typeColors[i.type] || 'white/50';
+                const ic = typeIcons[i.type] || '·';
+                const dot = dotColors[i.type] || 'bg-white/20';
+                return `<div class="flex items-start gap-2 py-px">
+                  <span class="w-1.5 h-1.5 rounded-full ${dot} mt-1 shrink-0"></span>
+                  <span class="text-[11px] leading-relaxed text-${c}">${esc(i.text)}</span>
+                </div>`;
+              }).join('')}
+            </div>
+          </div>`;
+        }).join('');
+      } else {
+        feed.innerHTML = '<div class="text-xs text-white/30 text-center py-8">暂无活动记录</div>';
+      }
+    } catch(e) {
+      document.getElementById('activity-feed').innerHTML = '<div class="text-xs text-red-400 text-center py-4">加载失败</div>';
+    }
+
+    // Node details
+    const details = document.getElementById('node-details');
+    details.innerHTML = `
+      <div class="grid grid-cols-2 gap-2">
+        <div class="p-2 rounded bg-white/2"><span class="text-white/40">Survival</span><span class="text-emerald-400 float-right">${esc(node.survival||'--')}</span></div>
+        <div class="p-2 rounded bg-white/2"><span class="text-white/40">Status</span><span class="text-emerald-400 float-right">${esc(node.status||'--')}</span></div>
+        <div class="p-2 rounded bg-white/2"><span class="text-white/40">Published</span><span class="text-orange-400 float-right">${node.total_published||'--'}</span></div>
+        <div class="p-2 rounded bg-white/2"><span class="text-white/40">Promoted</span><span class="text-emerald-400 float-right">${node.total_promoted||'--'}</span></div>
+        <div class="p-2 rounded bg-white/2"><span class="text-white/40">Rejected</span><span class="text-red-400 float-right">${node.total_rejected||0}</span></div>
+        <div class="p-2 rounded bg-white/2"><span class="text-white/40">Confidence</span><span class="text-purple-400 float-right">${node.avg_confidence ? (node.avg_confidence * 100).toFixed(1) + '%' : '--'}</span></div>
+        <div class="p-2 rounded bg-white/2"><span class="text-white/40">Symbiosis</span><span class="text-cyan-400 float-right">${node.symbiosis_score||'--'}</span></div>
+        <div class="p-2 rounded bg-white/2"><span class="text-white/40">Credit</span><span class="text-purple-400 float-right">${node.credit||node.credit_balance||0}</span></div>
+      </div>
+      ${node.note ? '<div class="mt-2 p-2 rounded bg-amber-500/10 text-amber-400 text-xs">⚠️ ' + esc(node.note) + '</div>' : ''}
+      ${node.recent_publishes ? '<div class="mt-2 text-xs text-white/40">Recent: ✅ ' + node.recent_publishes.success + ' success, ❌ ' + node.recent_publishes.quarantined + ' quarantined</div>' : ''}
+    `;
+
+    document.getElementById('node-time').textContent = 'updated: ' + (node.updated || '--');
+
+    // Load projects dynamically
+    try {
+      const projData = await fetch('/api/projects').then(r => r.json());
+      const projs = projData.projects || [];
+      const grid = document.getElementById('projects-grid');
+      const icons = ['🚀', '📦', '🛡️'];
+      const gradients = [
+        'from-orange-500 to-red-500',
+        'from-cyan-500 to-blue-500',
+        'from-purple-500 to-pink-500'
+      ];
+      const glows = ['glow-orange', 'glow-purple', 'glow-green'];
+      const badgeColors = ['emerald', 'cyan', 'purple'];
+
+      grid.innerHTML = projs.map((p, idx) => {
+        const icon = icons[idx] || '📋';
+        const grad = gradients[idx] || gradients[0];
+        const glow = glows[idx] || '';
+        const bc = badgeColors[idx] || 'emerald';
+        const priority = idx === 0 ? 'P0' : 'P1';
+
+        // Render phases: show last phase tasks as current, previous phases as completed
+        let tasksHtml = '';
+        p.phases.forEach(phase => {
+          const allDone = phase.tasks.length > 0 && phase.tasks.every(t => t.done);
+          const someDone = phase.tasks.some(t => t.done);
+          const phaseLabel = phase.name.replace(/✅\s*/, '');
+
+          if (allDone) {
+            tasksHtml += `<div class="flex items-center gap-1 px-2 py-1 rounded text-[10px] text-white/30 bg-white/[0.02]">✓ ${esc(phaseLabel)}</div>`;
+          } else {
+            phase.tasks.forEach(t => {
+              if (t.done) {
+                tasksHtml += `<div class="flex items-center px-2 py-1 rounded text-xs text-emerald-400 bg-emerald-400/5">✓ ${esc(t.text)}</div>`;
+              } else {
+                tasksHtml += `<div class="flex items-center px-2 py-1 rounded text-xs text-white/60 bg-white/2">◯ ${esc(t.text)}</div>`;
+              }
+            });
+          }
+        });
+
+        // Pending items
+        if (p.pending && p.pending.length > 0) {
+          p.pending.forEach(pt => {
+            tasksHtml += `<div class="flex items-center px-2 py-1 rounded text-xs text-amber-400/70 bg-amber-400/5">⏳ ${esc(pt)}</div>`;
+          });
+        }
+
+        const statusText = p.status ? p.status.substring(0, 60) : '';
+        const phaseLabel = p.phases.length > 0 ?
+          (p.phases[p.phases.length - 1].name.includes('✅') ? 'All Phases Done' : p.phases[p.phases.length - 1].name.replace(/第(.+)阶段/, 'Phase $1').substring(0, 30)) : '';
+
+        return `<div class="glass p-6 fade-in">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="text-2xl">${icon}</span>
+            <div class="flex-1 min-w-0">
+              <h3 class="font-semibold text-white text-sm truncate">${esc(p.title)}</h3>
+              <span class="text-xs text-${bc}-400">${priority} · ${esc(phaseLabel)} · ${p.progress}%</span>
+            </div>
+          </div>
+          ${p.goal ? '<div class="text-[10px] text-white/30 mb-3 truncate" title="' + esc(p.goal) + '">' + esc(p.goal) + '</div>' : ''}
+          <div class="space-y-1.5 max-h-32 overflow-y-auto">${tasksHtml}</div>
+          <div class="mt-3">
+            <div class="flex justify-between text-[10px] mb-1"><span class="text-white/40">Progress</span><span class="text-white/60">${p.done_count}/${p.total_count} (${p.progress}%)</span></div>
+            <div class="h-1.5 bg-white/5 rounded-full overflow-hidden"><div class="h-full bg-gradient-to-r ${grad} progress-animate" style="width: ${p.progress}%"></div></div>
+          </div>
+        </div>`;
+      }).join('');
+    } catch(e) {
+      console.log('Projects load error:', e);
+    }
+
+    // Load completed projects (P.md)
+    try {
+      const compData = await fetch('/api/completed').then(r => r.json());
+      const lines = (compData.content || '').split('\n').filter(l => l.trim());
+      const entries = [];
+      let current = null;
+      for (const l of lines) {
+        if (l.startsWith('## ✅')) {
+          if (current) entries.push(current);
+          current = { title: l.replace('## ✅ ', ''), items: [] };
+        } else if (current && l.startsWith('- ')) {
+          current.items.push(l.replace('- ', ''));
+        }
+      }
+      if (current) entries.push(current);
+      
+      document.getElementById('completed-count').textContent = entries.length > 0 ? `(${entries.length} 项)` : '(空)';
+      const cc = document.getElementById('completed-content');
+      if (entries.length > 0) {
+        cc.innerHTML = entries.map(e => `
+          <div class="mb-3 pb-2 border-b border-white/5">
+            <div class="text-emerald-400/80 text-[11px] font-medium mb-1">${esc(e.title)}</div>
+            ${e.items.slice(0, 3).map(i => `<div class="text-white/40 text-[10px] ml-2">${esc(i)}</div>`).join('')}
+            ${e.items.length > 3 ? `<div class="text-white/20 text-[10px] ml-2">+${e.items.length - 3} more</div>` : ''}
+          </div>
+        `).join('');
+      } else {
+        cc.innerHTML = '<div class="text-white/20 text-center py-2">暂无已完成项目</div>';
+      }
+    } catch(e) {
+      console.log('Completed load error:', e);
+    }
+
+    // Load resources
+    try {
+      const today = new Date().toISOString().split('T')[0];
+      const resResp = await fetch('/api/resources').then(r => r.json()).catch(() => ({items:[]}));
+      const rl = document.getElementById('resources-list');
+      const rc = document.getElementById('resources-count');
+      if (resResp.items && resResp.items.length > 0) {
+        rc.textContent = `(${resResp.items.length})`;
+        rl.innerHTML = resResp.items.map(r => `
+          <div class="flex items-center gap-2 p-2 rounded-lg bg-white/[0.02] hover:bg-white/[0.04] transition-colors">
+            <span class="text-[10px] px-1.5 py-0.5 rounded ${r.status==='已收录'?'bg-emerald-400/10 text-emerald-400':'bg-orange-400/10 text-orange-400'}">${esc(r.status||'新发现')}</span>
+            <span class="text-xs text-white/80 flex-1">${esc(r.name)}</span>
+            <span class="text-[10px] text-white/30">${esc(r.stars||'')}</span>
+            ${r.url ? `<a href="${esc(r.url)}" target="_blank" class="text-[10px] text-cyan-400/60 hover:text-cyan-300">↗</a>` : ''}
+          </div>
+        `).join('');
+      } else {
+        rl.innerHTML = '<div class="text-xs text-white/20 text-center py-2">今日暂无新发现</div>';
+      }
+    } catch(e) { console.log('Resources load error:', e); }
+
+    // Refresh every 15s
+  } catch(e) {
+    console.log('Refresh error:', e);
+  }
+}
+
+refreshData();
+setInterval(refreshData, 15000);
+
+function toggleCompleted() {
+  const s = document.getElementById('completed-section');
+  const a = document.getElementById('completed-arrow');
+  if (s.classList.contains('hidden')) {
+    s.classList.remove('hidden');
+    a.textContent = '▼';
+  } else {
+    s.classList.add('hidden');
+    a.textContent = '▶';
+  }
+}
+</script>
+</body>
+</html>

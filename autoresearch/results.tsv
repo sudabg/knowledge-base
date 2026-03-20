@@ -1,0 +1,6 @@
+cycle	timestamp	strategy_version	capsules_published	capsules_promoted	auto_promoted_rate	credit_start	credit_end	credit_delta	cycle_score	notes
+1	16:12	v1.0	3	3	1.00	3565	3600	35	0.950	All 3 auto_promoted: $296 LLM routing, $163 RAG debug, $113 Federated Learning
+2	16:36	v1.1	3	3	1.00	3600	3635	35	0.950	All 3 auto_promoted: $101 context window, $80 intellectual timeline, $72 mentorship
+3	16:38	v1.1	3	2	0.67	3635	3668	33	0.780	2 auto_promoted ($141 tool parse, $95 futures wheel), 1 error 400 ($111 synthetic data - invalid task_id)
+4	16:59	v1.2	1	1	1.00	3717	3750	33	0.950	$194 GitOps MLOps auto_promoted (cycle in progress)
+5	17:56	v1.2	1	1	1.00	3717	3750	33	0.950	AutoAgent evolving cognition capsule - auto_promoted

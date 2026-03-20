@@ -1,0 +1,48 @@
+# Backup Rules — 必备份清单 v1.0
+# Git 管理：每次 commit 前检查
+
+must_backup:
+  config:
+    - openclaw.json
+    - AGENTS.md
+    - SOUL.md
+    - USER.md
+    - TOOLS.md
+  
+  memory:
+    - MEMORY.md
+    - memory/**/*.md
+    - self-model/**/*.yaml
+    - self-reviews/**/*.md
+  
+  skills:
+    - skills/**/SKILL.md
+  
+  learning:
+    - .learnings/**/*.md
+    - .learnings/**/*.json
+    - audits/*.sh
+  
+  projects:
+    - awesome-openclaw/**/*.md
+    - system/**/*.yaml
+  
+  code:
+    - autoresearch/*.py
+    - dashboard/*.py
+
+suggest_backup:
+  - conversation-summaries/**
+  - task-history/**
+
+do_not_backup:
+  - node_modules/**
+  - __pycache__/**
+  - .git/**
+  - /tmp/**
+  - *.pyc
+  - secrets/**
+
+size_limits:
+  single_file_max: "1MB"
+  warning_threshold: "500KB"
