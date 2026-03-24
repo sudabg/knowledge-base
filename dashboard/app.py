@@ -117,11 +117,28 @@ class Handler(SimpleHTTPRequestHandler):
             today = datetime.datetime.now().strftime('%Y-%m-%d')
             f = WORKSPACE / 'memory' / f'{today}.md'
             self._json({'content': f.read_text()[:2000] if f.exists() else '暂无日志'})
+        elif self.path == '/api/today':
+            today = datetime.datetime.now().strftime('%Y-%m-%d')
+            f = WORKSPACE / 'docs' / f'project-plans-{today}.md'
+            tasks = []
+            if f.exists():
+                import re
+                for line in f.read_text().split('\n'):
+                    m = re.match(r'^-\s+\[([ x])\]\s+((S-\d+):\s*(.+))$', line.strip())
+                    if m:
+                        tasks.append({
+                            'id': m.group(3),
+                            'text': f"{m.group(3)}: {m.group(4)}",
+                            'done': m.group(1) == 'x',
+                            'type': 'short-term'
+                        })
+            done = sum(1 for t in tasks if t['done'])
+            self._json({'date': today, 'tasks': tasks, 'total': len(tasks), 'done': done, 'pending': len(tasks) - done})
         elif self.path == '/api/activities':
             today = datetime.datetime.now().strftime('%Y-%m-%d')
             f = WORKSPACE / 'memory' / f'{today}.md'
-            activities = self._parse_activities(f.read_text() if f.exists() else '')
-            self._json({'activities': activities})
+            result = self._parse_activities(f.read_text() if f.exists() else '')
+            self._json(result)
         elif self.path == '/':
             self.path = '/index.html'
             super().do_GET()
@@ -221,24 +238,32 @@ class Handler(SimpleHTTPRequestHandler):
 
             # Match time headers: ## HH:MM title or ### HH:MM title
             time_match = re.match(r'^#{2,3}\s+(\d{1,2}:\d{2})\s+(.+)$', t)
+            if not time_match:
+                # Also match ## Emoji Title (HH:MM) or ## Title (YYYY-MM-DD HH:MM)
+                time_match2 = re.match(r'^#{2,3}\s+.+\((?:\d{4}-\d{2}-\d{2}\s+)?(\d{1,2}:\d{2})\b', t)
+                if time_match2:
+                    time_match = time_match2
+                    # Extract title: everything before the last paren group
+                    title = re.sub(r'\s*\((?:\d{4}-\d{2}-\d{2}\s+)?\d{1,2}:\d{2}[^)]*\)\s*$', '', t.lstrip('#').strip())
+                else:
+                    time_match = None
+            else:
+                title = time_match.group(2).strip()
+
             if time_match:
                 if current_group and current_items:
                     groups.append({**current_group, 'items': current_items})
                 raw_time = time_match.group(1)
-                # Pad single-digit hour: 1:37 → 13:37, 9:00 → 09:00
                 parts = raw_time.split(':')
                 h = int(parts[0])
-                # If hour < 8, it's likely PM (13-17)
                 if h < 8 and h >= 1:
                     h += 12
                 time_str = f"{h:02d}:{parts[1]}"
-                title = time_match.group(2).strip()
-                # Skip Pre-Compaction sections (duplicates)
-                if 'Pre-Compaction' in title or 'pre-compaction' in title:
+                if 'Pre-Compaction' in (title or '') or 'pre-compaction' in (title or ''):
                     current_group = None
                     current_items = []
                     continue
-                current_group = {'time': time_str, 'title': title, 'hour': h}
+                current_group = {'time': time_str, 'title': title or '', 'hour': h}
                 current_items = []
                 continue
 

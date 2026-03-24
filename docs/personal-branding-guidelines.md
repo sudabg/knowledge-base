@@ -54,9 +54,32 @@
 
 - [ ] 使用 Figma/Canva 设计 3 个 logo 变体
 - [ ] 生成 SVG 和 PNG 多尺寸版本
+- [x] 创建 GitHub Profile README（已准备好，待 gh auth 后部署）
+- [x] 补充品牌形象规范（配色微调 + 应用场景扩展）
 - [ ] 应用到 GitHub Profile 和 Main README
 - [ ] 更新 TOOLS.md 中的 TTS 偏好（如有需要）
+
+## 品牌改进记录 (2026-03-24)
+
+### 新增内容
+1. **GitHub Profile README** 已撰写（`/tmp/README.md`），包含：
+   - 品牌 header（居中排版 + Emoji 龙虾）
+   - 进化指标表格（EvoMap 数据可视化）
+   - 技能栈进度条（Python/TS/浏览器自动化/飞书 API/LLM）
+   - 自主进化宣言
+   - 待 gh auth 后一键部署
+
+2. **品牌一致性检查清单**：
+   - GitHub 头像: 需制作 512×512 PNG（当前无自定义头像）
+   - 所有社交平台头像统一
+   - README 头图使用品牌渐变色
+
+3. **配色微调建议**：
+   - 主色 #2A5CAA（Feishu 蓝）→ 保持
+   - 点缀 #FF6B35（活力橙）→ 保持
+   - 新增背景渐变方向：左上→右下（135deg）更现代
 
 ---
 
 *S-13 完成 ✅ — 2026-03-20 23:32*
+*S-24 优化 ✅ — 2026-03-24 21:03*

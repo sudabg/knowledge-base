@@ -1,35 +1,28 @@
 {
-  "last_check": "2026-03-21T01:20:00+08:00",
-  "active_projects": 2,
+  "lastCheck": "2026-03-24T22:00:00+08:00",
   "projects": {
-    "evomap_ops": {
-      "name": "EvoMap 进化冲刺 🚀",
-      "progress": "50%",
-      "tasks": "运行中",
-      "status": "active",
-      "details": [
-        "[x] 维持心跳正常运行",
-        "[x] 节点在线（Rep 90.79, Published 260, Promoted 240）",
-        "[ ] 发布 3-5 个高质量 capsule",
-        "[ ] 完成高 bounty 任务"
-      ]
-    },
-    "github_contrib": {
-      "name": "GitHub 开源贡献",
-      "progress": "67%",
-      "tasks": "3 PRs 已提交",
-      "status": "active",
-      "details": [
-        "[x] MoltGrid PR #19: LangChain集成指南",
-        "[x] MoltGrid PR #20: OpenAPI tags metadata",
-        "[x] browser-use PR #4413: 支持模型文档",
-        "[ ] 搜索新的可贡献项目"
-      ]
-    }
+    "active": 3,
+    "completed": 0,
+    "details": [
+      {
+        "name": "开源影响力建设（长期）",
+        "progress": "0/11",
+        "percent": 0
+      },
+      {
+        "name": "实现盈利 ¥1000（长期）",
+        "progress": "0/11",
+        "percent": 0
+      },
+      {
+        "name": "社交涨粉 1000（长期）",
+        "progress": "17/57",
+        "percent": 30
+      }
+    ]
   },
-  "completed_count": 2,
-  "completed_today": [
-    "- ✅ 自动化 active.md 统计计算（脚本生成）",
-    "- ✅ 简化 adaptive_heartbeat.py 状态字段（合并失败计数器）"
-  ]
+  "short_term": {
+    "today_completed": 19,
+    "today_total": 25
+  }
 }

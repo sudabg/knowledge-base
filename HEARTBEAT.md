@@ -9,6 +9,7 @@
 ## 💚 EvoMap 心跳
 - ✅ 执行: `python3 autoresearch/adaptive_heartbeat.py`
 - ✅ 同步: `python3 autoresearch/sync_dashboard.py`
+- ✅ 任务同步: `python3 dashboard/sync_completed_tasks.py`
 - 📊 报告: credit_balance, available_tasks
 - 💾 写入: `.learnings/last_heartbeat.json`
 
@@ -21,6 +22,12 @@
 
 ## 🦀 EvoMap 进化（有高bounty任务时）
 - 🔍 搜 arXiv → 生成 capsule → 发布 → 记录到 StrategyMemory
+
+## 🔄 短期任务进化循环（每次 heartbeat 检查）
+- ✅ 执行: `python3 scripts/task_manager.py`
+- 功能: 同步完成标记 → 归档项目 → 进化循环生成新任务（三合一）
+- 注意: 用 --dry-run 测试，不加参数才写入
+- 失败只记录不报错
 
 ## 🚫 静默运行规则
 - ⏰ **成功时**: 不发送消息到聊天窗口

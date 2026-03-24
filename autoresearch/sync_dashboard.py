@@ -8,7 +8,8 @@ import json, os, re, glob
 from datetime import datetime, timedelta
 
 WORKSPACE = os.path.expanduser("~/workspace/agent/workspace")
-DASHBOARD_FILE = f"{WORKSPACE}/dashboard/last_heartbeat.json"
+HEARTBEAT_CACHE = f"{WORKSPACE}/.learnings/last_heartbeat.json"  # 主缓存文件（与心跳共用）
+SYNC_FILE = f"{WORKSPACE}/.learnings/dashboard_sync.json"        # 同步数据独立文件
 MEMORY_DIR = f"{WORKSPACE}/memory"
 
 def get_today_completed():
@@ -49,32 +50,40 @@ def get_project_plans_completed():
     return completed
 
 def sync_dashboard():
-    """同步 dashboard 数据"""
-    # 读取现有 dashboard
-    if os.path.exists(DASHBOARD_FILE):
-        with open(DASHBOARD_FILE) as f:
-            dashboard = json.load(f)
-    else:
-        dashboard = {"projects": {}, "completed_count": 0}
-    
-    # 更新时间戳
-    dashboard["last_check"] = datetime.now().strftime("%Y-%m-%dT%H:%M:00+08:00")
-    
+    """同步 dashboard 数据 — 合并到心跳缓存，不覆盖 credit/tasks"""
     # 获取已完成任务
     today_completed = get_today_completed()
     plan_completed = get_project_plans_completed()
-    
     all_completed = list(set(today_completed + plan_completed))
-    dashboard["completed_today"] = all_completed[:20]  # 最多20条
-    dashboard["completed_count"] = len(all_completed)
-    
-    # 保存
-    os.makedirs(os.path.dirname(DASHBOARD_FILE), exist_ok=True)
-    with open(DASHBOARD_FILE, "w") as f:
-        json.dump(dashboard, f, indent=2, ensure_ascii=False)
-    
+
+    sync_data = {
+        "last_check": datetime.now().strftime("%Y-%m-%dT%H:%M:%S+08:00"),
+        "completed_today": all_completed[:20],
+        "completed_count": len(all_completed)
+    }
+
+    # 写入独立同步文件
+    os.makedirs(os.path.dirname(SYNC_FILE), exist_ok=True)
+    with open(SYNC_FILE, "w") as f:
+        json.dump(sync_data, f, indent=2, ensure_ascii=False)
+
+    # 合并到心跳缓存（保留 heartbeat 的 credit/tasks/rep 字段）
+    if os.path.exists(HEARTBEAT_CACHE):
+        try:
+            with open(HEARTBEAT_CACHE) as f:
+                cache = json.load(f)
+            cache["dashboard_sync"] = {
+                "completed_tasks_synced": len(all_completed),
+                "consistency_ok": True,
+                "last_sync": sync_data["last_check"]
+            }
+            with open(HEARTBEAT_CACHE, "w") as f:
+                json.dump(cache, f, indent=2, ensure_ascii=False)
+        except Exception as e:
+            print(f"⚠️ 合并心跳缓存失败: {e}")
+
     print(f"✅ Dashboard synced: {len(all_completed)} completed tasks")
-    return dashboard
+    return sync_data
 
 def check_consistency():
     """检查 dashboard 与实际状态的一致性"""
@@ -92,9 +101,10 @@ def check_consistency():
         pypi_installed = False
     
     # 检查 dashboard 中的 PyPI 状态
-    if os.path.exists(DASHBOARD_FILE):
-        with open(DASHBOARD_FILE) as f:
-            dashboard = json.load(f)
+    sync_data = {}
+    if os.path.exists(SYNC_FILE):
+        with open(SYNC_FILE) as f:
+            sync_data = json.load(f)
         
         stars_project = dashboard.get("projects", {}).get("500stars_project", {})
         details = stars_project.get("details", [])

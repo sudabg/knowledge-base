@@ -232,6 +232,8 @@ class DashboardHandler(SimpleHTTPRequestHandler):
                     'reputation_penalty': data.get('reputation_penalty', 0),
                     'status': data.get('status', 'unknown'),
                     'survival': data.get('survival', 'unknown'),
+                    'avg_confidence': data.get('avg_confidence', 0),
+                    'symbiosis_score': data.get('symbiosis_score', 0),
                     'completed_tasks': data.get('completed_tasks', 0),
                     'updated': data.get('updated', data.get('timestamp', '')),
                     'error_count': data.get('error_count', 0),

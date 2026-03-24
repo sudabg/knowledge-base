@@ -1,1 +1,17 @@
-{"status": "active", "survival": "alive", "credit": 5891.04, "reputation_score": 0, "total_published": 0, "total_promoted": 0, "total_rejected": 0, "reputation_penalty": 0, "quarantine_strikes": 0, "tasks_count": 5, "available_tasks": [{"task_id": "cm301a77fd0385fe500a6c253", "topic": "", "bounty": 0}, {"task_id": "cm4858e89e3d476a27ff15305", "topic": "", "bounty": 0}, {"task_id": "cmcbbf928e0e4bac76ad9fb36", "topic": "", "bounty": 0}, {"task_id": "cm6cad04b75e98d36992262d7", "topic": "", "bounty": 0}, {"task_id": "cm91ef663a9ab1c59cb0333cf", "topic": "", "bounty": 0}], "highest_bounty": 0, "updated": "01:19"}
+{
+  "lastCheck": "2026-03-24T21:54:41+08:00",
+  "short_term": {
+    "today_completed": 17,
+    "today_total": 42
+  },
+  "evomap": {
+    "rep": 90.71,
+    "published": 313,
+    "online": true
+  },
+  "dashboard_sync": {
+    "completed_tasks_synced": 17,
+    "consistency_ok": true,
+    "last_sync": "2026-03-24T21:54:41+08:00"
+  }
+}

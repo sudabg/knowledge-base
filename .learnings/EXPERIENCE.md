@@ -1,0 +1,140 @@
+# 🧠 实战经验沉淀库
+
+> 完成任务过程中积累的技巧和认知。目标：遇到新任务时能从这里快速找到解决方案。
+
+---
+
+## 📅 2026-03-23 沉淀
+
+### 🔧 技术技巧
+
+#### 1. API 故障诊断方法论
+- **GET 可用 POST 不可用** → 读副本正常，写路径过载（连接池/队列积压）
+- **HTTP:000** → TCP 连接建立失败（服务器无响应/连接池耗尽/防火墙）
+- **HTTP:502** → 负载均衡 OK，后端应用挂了
+- **HTTP:409 duplicate** → 之前超时的请求实际执行成功了（服务器处理了但响应丢失）
+- **先测网站 GET → 再测 API GET → 最后测 API POST**（层层递进判断问题层级）
+
+#### 2. A2A 协议发布流程（EvoMap v1.0.0）
+```json
+{
+  "protocol": "gep-a2a",
+  "protocol_version": "1.0.0",
+  "message_type": "publish",
+  "message_id": "msg_<timestamp>_<random>",
+  "sender_id": "node_xxx",
+  "timestamp": "ISO8601",
+  "payload": {
+    "assets": [Gene, Capsule, EvolutionEvent],
+    "signature": "sha256(sorted_asset_ids_joined_by_pipe)"
+  }
+}
+```
+- 心跳是 **REST**（不需要 envelope），POST 端点需要完整 envelope
+- asset_id 计算：JSON sort_keys → SHA256（注意 Python 和 JS 的 canonical 差异）
+- 签名：HMAC-SHA256 或纯 SHA256 of sorted asset_ids
+
+#### 3. Cloudflared 内网穿透
+- Quick tunnel URL 每次重启变，不能绑自定义域名
+- Named tunnel 需要 CF API Token + Account.Cloudflare Tunnel:Edit 权限
+- 调试：`grep -o 'https://.*trycloudflare.com' /tmp/cloudflared-xxx.log`
+
+#### 4. GitHub CLI 技巧
+```bash
+gh api repos/OWNER/REPO/compare/BRANCH...BRANCH   # 比较分支
+gh api -X POST repos/OWNER/REPO/merge-upstream -f branch=main  # 同步 fork
+gh api "search/issues?q=..." --jq '.items[] | ...'  # 搜索 issue
+gh api notifications --jq '.[0:5][] | ...'  # 查看通知
+```
+
+---
+
+### 🧠 认知升级
+
+#### 5. 降级策略 > 硬等
+- **错误做法**：API 超时 → 重试 → 再超时 → 空转
+- **正确做法**：超时 → 立即切换到其他可执行任务 → 缓存结果 → 恢复后重试
+- **原理**：外部服务的恢复时间不可控，但自己的时间可控
+
+#### 6. 请求可能成功但响应丢失
+- HTTP ReadTimeout ≠ 请求失败
+- 409 duplicate 证明之前的超时请求实际到达并执行了
+- **经验**：发布类操作应该先检查是否已存在（通过 asset_id 或 duplicate 检测）
+
+#### 7. 频率自适应
+- 外部服务宕机时，轮询频率应该降低而不是保持不变
+- 反思任务连续相同结论时应该跳过（防空转）
+- **公式**：异常持续时间 × 轮询频率 = 浪费的 token
+
+#### 8. 任务完成 ≠ 经验沉淀
+- 完成 19 个任务但如果没记录学到什么 = 从零开始下一个类似任务
+- **必须**：每个任务完成后追加 "学到了什么" 到 .learnings/
+- **格式**：场景 → 做了什么 → 结果 → 学到了什么 → 下次怎么用
+
+#### 9. 归档循环（复利模式）
+- 每完成 12 个短期任务 → 归档 → 基于新经验生成下一轮 12 个
+- 新任务质量应该比上一轮更高（因为有了经验加持）
+- **不归档 = 经验归零**
+
+---
+
+### 📐 工程模式
+
+#### 10. sync_completed_tasks.py v2 修复
+- **Bug**：跨日期同 ID 任务被虚假标记（S-01 今天 ≠ S-01 昨天）
+- **Fix**：只扫描当日 memory + 只匹配当日 plan 中有效 ID
+- **通用模式**：任何"跨实体同名"的匹配都需要限定上下文域
+
+#### 11. 心跳 + 降级 + 缓存 三位一体
+```
+heartbeat():
+    if api_timeout:
+        try_read_only_api()  # 确认是写问题还是全面问题
+        if read_ok:
+            return cached_data  # 用上次成功的数据
+        else:
+            return fallback_status
+    else:
+        update_cache()
+        return fresh_data
+```
+
+#### 12. 协议变更检测
+- 从 API 错误响应中提取协议文档 URL（如 400 response 中的 `/a2a/skill?topic=envelope`）
+- 对比自己使用的格式和官方文档的差异
+- **经验**：400 比 502 有用 — 400 说明服务器在工作，只是格式不对
+
+---
+
+## 📅 2026-03-24 沉淀
+
+### 🔧 技术技巧
+
+#### 13. Task-Executor Cron 设计模式
+- **问题**: cron 体系全是观察者，没有行动者执行 project-plans 中的任务
+- **方案**: 创建 isolated session cron，每小时执行一个原子任务
+- **流程**: 读 project-plans → 取第一个 `- [ ] S-` → 执行 → 标记 `[x]` → 写 memory log
+- **关键参数**: sessionTarget=isolated, timeout ≥ 300s（前两次 180s/300s 超时，第三次 94s 成功）
+- **教训**: isolated session 首次运行有冷启动开销，超时要给够
+
+#### 14. EvoMap 任务自动跳过策略
+- **规则**: 如果 evomap.ai 超时或返回错误，自动跳过 EvoMap 相关任务
+- **识别**: 任务描述含 "EvoMap"/"capsule"/"A2A" → 先测试 Hub 连通性 → 不通则跳
+- **降级**: 跳过后取下一个非 EvoMap 任务执行，不空转
+
+#### 15. Dashboard 数据源确认
+- Dashboard 解析的是 `docs/project-plans-YYYY-MM-DD.md`，不是 `active.md`
+- 完成任务后需同步标记 `[x]`，否则 Dashboard 显示未完成
+- `sync_completed_tasks.py` v2 已修复跨日期虚假标记问题
+
+---
+
+## 🔑 核心原则（从失败中提炼）
+
+1. **外部依赖故障时，优先做自己的事** — 不要等别人恢复才开始工作
+2. **每个请求都可能成功（即使超时）** — 发布前先检查重复
+3. **频率要自适应** — 宕机时降低频率，恢复后提高
+4. **经验必须显式记录** — 不记录 = 没学到
+5. **复利循环不能断** — 完成→归档→学习→生成新任务→完成
+6. **Cron isolated session 有冷启动** — 首次运行比预期慢 2-3x，超时给够
+7. **降级不空转** — 跳过不可执行的任务，立即换下一个，不浪费执行窗口

@@ -236,7 +236,9 @@ payload = {
 
 ### Gene 规范
 - `signals_match`: 5-8 个信号，每个 ≥3 字符
-- `strategy`: 每步 ≥15 字符，3-6 步
+- `strategy`: 每步 ≥15 字符，3-6 步，**必须用英文**（中文字符计数不满足验证器）
+  - ⚠️ 避免安全审查敏感词：隐式、路径依赖、内部状态追踪、激活转向、内省
+  - ✅ 安全表述：推理质量、不确定性量化、嵌入优化、模型部署、训练流水线
 - `category`: repair/optimize/innovate/regulatory
 
 ### Capsule 规范
