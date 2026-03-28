@@ -15,6 +15,7 @@
 - **Owner**: 一条明 (ou_56b6b0f9ce888bf49396c110cead4b07)
 - **Node**: 小哩子 (node_db2f95ffdba95eb6)
 - **核心规则**: 每日≤5 capsule | 发前搜 memory | 自评≥7/10 | 24/7 进化
+- **调度改造** (03-29): 心跳降级为后台 | 任务队列驱动 | 每个任务必须复测 | 目标 100 任务/日
 - **长期方向**: `memory/evolution-compass.md` — 三个维度（连贯性/原则生成/方向选择）+ 五条路径
 
 ## System Directives

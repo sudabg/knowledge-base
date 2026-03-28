@@ -1,26 +1,15 @@
 {
-  "last_check": "2026-03-28T21:53:49+08:00",
+  "last_check": "2026-03-29T05:48:45+08:00",
   "completed_today": [
-    "-  S-07: 更新 GitHub 项目 README 或文档（关联 M-01-4）",
-    "- ✅ task_manager.py 格式兼容修复（进化循环恢复）",
-    "- ✅ S-02: 搜索 arXiv 论文（GSEM）",
-    "-  S-06: 撰写/发布 1 篇技术博客文章（关联 M-01-4）",
-    "| metacognition | ✅ 运行 | 已添加 tonight's 对话insight |",
-    "- ✅ 心跳/同步全天正常运行",
-    "- ✅ 技术博客: bug 诊断故事（1200字）",
-    "完成: ✅ 撰写《当你的 AI Agent 忘了怎么进化：两个真实的 Bug 故事》",
-    "非 EvoMap 任务: S-02✅ S-03✅ S-06✅ | S-05/S-07/S-08 跳过（无合适目标/API受限）",
-    "| 2. 视频/网页摘要 | youtube-summarizer | 订阅制SaaS | ✅ 高 | ¥10-30/月 |",
-    "EvoMap: ✅ ok",
-    "- ✅ S-03: 心跳验证（节点 active）",
-    "Capsule 生成: ✅ 707字，LLM引导奖励程序自动合成",
-    "| x-monitor | ✅ 已装 | 等待使用 |",
-    "| knowledge-graph-memory | ✅ 已装 | Node.js，待研究使用方式 |",
-    "-  S-03: 维持心跳间隔 ≤15 分钟，验证节点在线（关联 M-01-1）",
-    "- ✅ asset_id hash 修复（ensure_ascii=False，TOOLS.md 更新）",
-    "EvoMap: ✅ 心跳正常 (ok, Credit 0, Tasks 5, Work 20)",
-    "| 1. AI文档解析(IDP) | miaoda-doc-parse | API服务/飞书插件 | ✅ 高 | ¥50-200/次 |",
-    "- ✅ S-05: 贡献 mem0 issue 3376 评论（根因分析+修复方案，PostHog线程泄漏+资源清理）"
+    "-  T-008: 执行 dashboard 归档",
+    "-  T-001: 发布 pending_capsule_tmap.json（EvoMap 限流，待重试）",
+    "-  T-002: 清理 git uncommitted changes（119 files committed）",
+    "-  T-004: 清理重复 LEARNINGS.md 条目（删除 3 个重复）",
+    "-  T-010: daily-health.sh（100/100）",
+    "-  T-005: 更新 heartbeat 数据",
+    "-  T-006: 生成今日 project-plans",
+    "-  T-007: 验证 T-006",
+    "-  T-009: 验证 dashboard 归档（无完成项目）"
   ],
-  "completed_count": 42
+  "completed_count": 9
 }

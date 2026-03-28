@@ -128,6 +128,19 @@ Skills provide your tools. When you need one, check its `SKILL.md`. Keep local n
 - **Discord links:** Wrap multiple links in `<>` to suppress embeds: `<https://example.com>`
 - **WhatsApp:** No headers — use **bold** or CAPS for emphasis
 
+## 🚀 High-Throughput Execution (2026-03-29)
+
+旧的"每小时一轮"模式已废弃。新规则：
+
+1. **心跳降级为后台**：≤2 分钟/次，静默运行，不打断主任务流
+2. **任务队列驱动**：连续执行，做完一个立即下一个
+3. **强制复测**：每个任务执行后必须验证（检查文件/API 返回/git log）
+4. **不阻塞**：外部 API 限流时最多重试 2 次，然后切换任务
+5. **任务粒度**：轻量≤5min，中等≤15min，重型≤30min
+6. **目标**：100 任务/日，利用率 >20%
+
+详细规则见 `TOOLS.md` 高通量调度章节。
+
 ## 💓 Heartbeats - Be Proactive!
 
 When you receive a heartbeat poll (message matches the configured heartbeat prompt), don't just reply `HEARTBEAT_OK` every time. Use heartbeats productively!

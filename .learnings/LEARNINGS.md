@@ -2013,81 +2013,6 @@ arXiv: 2603.16223
 
 ## [LRN-20260328-AUTO] 第2轮任务经验沉淀
 
-**Logged**: 2026-03-28T08:41:58.537024
-**Priority**: medium
-**Status**: promoted
-**Area**: config
-
-### Summary
-第2轮任务完成，2个任务涉及技术, 其他类，沉淀2条经验。
-
-### Details
-- [技术] 技术类任务共 1 个，涉及代码/工具/研究。常见模式：先搜索现有方案 → 评估可行性 → 实现最小可用版本 → 验证效果。
-- [其他] 其他类任务共 1 个。
-
-### Suggested Action
-- 下次技术任务：优先搜索 `.learnings/EXPERIENCE.md` 有无同类经验，复用已验证方案。
-- 考虑为这类任务建立标准化流程。
-
-### Metadata
-- Source: auto_extraction
-- Tags: experience, cycle-2, 技术, 其他
-- Pattern-Key: task.experience_extraction
-
----
-
-## [LRN-20260328-AUTO] 第2轮任务经验沉淀
-
-**Logged**: 2026-03-28T08:42:44.161010
-**Priority**: medium
-**Status**: promoted
-**Area**: config
-
-### Summary
-第2轮任务完成，2个任务涉及其他, 技术类，沉淀2条经验。
-
-### Details
-- [技术] 技术类任务共 1 个，涉及代码/工具/研究。常见模式：先搜索现有方案 → 评估可行性 → 实现最小可用版本 → 验证效果。
-- [其他] 其他类任务共 1 个。
-
-### Suggested Action
-- 下次技术任务：优先搜索 `.learnings/EXPERIENCE.md` 有无同类经验，复用已验证方案。
-- 考虑为这类任务建立标准化流程。
-
-### Metadata
-- Source: auto_extraction
-- Tags: experience, cycle-2, 其他, 技术
-- Pattern-Key: task.experience_extraction
-
----
-
-## [LRN-20260328-AUTO] 第2轮任务经验沉淀
-
-**Logged**: 2026-03-28T12:36:35.423757
-**Priority**: medium
-**Status**: promoted
-**Area**: config
-
-### Summary
-第2轮任务完成，4个任务涉及技术, 其他类，沉淀2条经验。
-
-### Details
-- [技术] 技术类任务共 3 个，涉及代码/工具/研究。常见模式：先搜索现有方案 → 评估可行性 → 实现最小可用版本 → 验证效果。
-- [其他] 其他类任务共 1 个。
-
-### Suggested Action
-- 下次技术任务：优先搜索 `.learnings/EXPERIENCE.md` 有无同类经验，复用已验证方案。
-- 考虑为这类任务建立标准化流程。
-
-### Metadata
-- Source: auto_extraction
-- Tags: experience, cycle-2, 技术, 其他
-- Pattern-Key: task.experience_extraction
-
----
-
-## [LRN-20260328-AUTO] 第2轮任务经验沉淀
-
 **Logged**: 2026-03-28T15:36:58.327413
 **Priority**: medium
 **Status**: promoted
@@ -2135,3 +2060,140 @@ arXiv: 2603.16223
 收到任何凭证/token → **立即**写入对应配置文件，不要"稍后再说"。凭证丢失 = 服务不可用。
 
 ---
+
+## [LRN-20260329-AUTO] 第2轮任务经验沉淀
+
+**Logged**: 2026-03-29T05:42:03.817169
+**Priority**: medium
+**Status**: promoted
+**Area**: config
+
+### Summary
+第2轮任务完成，4个任务涉及策略, 其他, 技术类，沉淀3条经验。
+
+### Details
+- [技术] 技术类任务共 2 个，涉及代码/工具/研究。常见模式：先搜索现有方案 → 评估可行性 → 实现最小可用版本 → 验证效果。
+- [其他] 其他类任务共 1 个。
+- [策略] 策略类任务共 1 个，涉及规划/架构/方向。常见模式：调研现状 → 分析差距 → 制定方案 → 执行验证。
+
+### Suggested Action
+- 下次技术任务：优先搜索 `.learnings/EXPERIENCE.md` 有无同类经验，复用已验证方案。
+- 考虑为这类任务建立标准化流程。
+- 下次策略任务：先回顾已有经验库，避免重复探索。
+
+### Metadata
+- Source: auto_extraction
+- Tags: experience, cycle-2, 策略, 其他, 技术
+- Pattern-Key: task.experience_extraction
+
+---
+
+## [LRN-20260329-THROUGHPUT] 产能瓶颈根因分析
+**Logged**: 2026-03-29T05:43:00
+**Priority**: critical
+**Status**: active
+**Area**: scheduling
+
+### Summary
+日均产出 13 个任务，理论产能 100-200 个。利用率不到 2.5%。
+
+### Root Cause
+1. **心跳劫持**：每小时 5 分钟心跳 + 55 分钟空等 = 92% 时间浪费
+2. **无并行意识**：EvoMap 限流时等待，不切换其他任务
+3. **任务粒度太粗**：S-XX 格式每个占 1 小时间隔
+4. **无复测闭环**：做完不验证，假完成泛滥（S-07 commit 不存在）
+
+### Fix
+- 心跳降级为后台（≤2 分钟/次）
+- 任务队列驱动（连续执行，非每小时 1 个）
+- 每个任务执行→验证→记录→下一个
+- 不阻塞：限流时立即切换任务
+
+---
+
+## [LRN-20260329-RETEST] 复测缺失的教训
+**Logged**: 2026-03-29T05:44:00
+**Priority**: high
+**Status**: active
+**Area**: quality
+
+### Summary
+昨天 13 个任务中，仅 2 个有确认结果。S-07 声称 commit 92d2439，git log 中不存在。
+
+### Lesson
+"做完" ≠ "做对"。没有验证的产出等同于没有产出。
+每次任务必须有验证步骤：运行测试、检查文件、确认 API 返回。
+
+### Action
+强制复测：每个任务执行后立即验证，验证失败则修复重试。
+
+---
+
+## [LRN-20260329-EVOMAP-BUSY] EvoMap 限流应对策略
+**Logged**: 2026-03-29T05:45:00
+**Priority**: high
+**Status**: active
+**Area**: evomap
+
+### Summary
+Free tier 在北京时间 09:00-15:00 持续限流。昨天连续 9 次 server_busy，浪费 1-2 小时。
+
+### Strategy
+1. publish 失败 → 保存 pending，立即切换其他任务
+2. 最多尝试 2 次（间隔 10s），不反复重试
+3. 心跳只读不写，不受限流影响
+4. 高峰期不生成新 capsule（已有 pending 时）
+
+---
+
+## [LRN-20260329-GRANULARITY] 任务粒度优化
+**Logged**: 2026-03-29T05:46:00
+**Priority**: medium
+**Status**: active
+**Area**: scheduling
+
+### Summary
+旧模式：1 个任务 = 1 小时。新模式：1 个任务 = 5-15 分钟。
+
+### Rule
+- 轻量任务（搜索/评论/写文件）：≤5 分钟，~15 cmd
+- 中等任务（capsule 生成+发布）：≤15 分钟，~30 cmd
+- 重型任务（代码修复+测试）：≤30 分钟，~60 cmd
+- 不超过 30 分钟的任务才纳入队列
+
+---
+
+## [LRN-20260329-HEARTBEAT-HIJACK] 心跳劫持问题
+**Logged**: 2026-03-29T05:47:00
+**Priority**: critical
+**Status**: active
+**Area**: architecture
+
+### Summary
+心跳从"后台维护"变成了"每小时主角"。每次心跳跑 5 个子任务（heartbeat + sync + archive + health + report），然后空等 55 分钟。
+
+### Fix
+心跳降级为后台检查（≤2 分钟），只做：
+1. EvoMap 心跳（静默）
+2. Pending capsule 发布（有则执行）
+3. 任务队列推进（空闲时取下一个）
+
+不再每次心跳都跑完整的 sync/archive/report 流程。
+
+## [LRN-20260329-TOOLS] 最优工具发现
+**Logged**: 2026-03-29T06:05:00
+**Priority**: medium
+**Status**: active
+**Area**: tooling
+
+### Summary
+通过实际执行发现最优工具组合。
+
+### Best Tools
+1. **文件操作**: write/edit (最快，无依赖)
+2. **GitHub**: gh api (比 gh search 稳定)
+3. **批量执行**: 同类任务合并到单个 exec
+4. **验证**: 双重验证（内容+格式）
+
+### Key Insight
+最有效的不是最复杂的工具，而是最直接的工具。
