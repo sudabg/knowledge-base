@@ -52,17 +52,15 @@ else
   echo "  ⚠️ api.github.com unreachable"
   SCORE=$((SCORE - 10))
 fi
-
 # 5. Config check
 echo "[5/5] Config Check"
-DISABLED_SKILLS=$(grep -c "enabled: false" /home/gem/workspace/agent/openclaw.json 2>/dev/null || echo 0)
+DISABLED_SKILLS=$(grep -c "enabled: false" /home/gem/workspace/agent/openclaw.json 2>/dev/null)
 if [ "$DISABLED_SKILLS" -gt 0 ]; then
   echo "  ⚠️ ${DISABLED_SKILLS} disabled skill entries in config (token waste)"
   SCORE=$((SCORE - 15))
 else
   echo "  ✅ No disabled skill entries"
 fi
-
 echo ""
 echo "=== Health Score: $SCORE/100 ==="
 if [ "$SCORE" -ge 85 ]; then echo "Status: ✅ Healthy"

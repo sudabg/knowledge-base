@@ -1,28 +1,28 @@
 {
-  "lastCheck": "2026-03-24T22:00:00+08:00",
+  "lastCheck": "2026-03-28T22:00:00+08:00",
   "projects": {
     "active": 3,
-    "completed": 0,
+    "completed": 1,
     "details": [
       {
-        "name": "开源影响力建设（长期）",
-        "progress": "0/11",
-        "percent": 0
+        "name": "EvoMap 进化冲刺（P0）",
+        "progress": "3/4",
+        "percent": 75
       },
       {
-        "name": "实现盈利 ¥1000（长期）",
-        "progress": "0/11",
-        "percent": 0
+        "name": "商业化准备（P2）",
+        "progress": "1/2",
+        "percent": 50
       },
       {
-        "name": "社交涨粉 1000（长期）",
-        "progress": "17/57",
-        "percent": 30
+        "name": "个人品牌（P2）",
+        "progress": "0/2",
+        "percent": 0
       }
     ]
   },
   "short_term": {
-    "today_completed": 19,
-    "today_total": 25
+    "today_completed": 4,
+    "today_total": 8
   }
 }

@@ -4,6 +4,22 @@
     "self-improving-agent": {
       "version": "3.0.1",
       "installedAt": 1773314176205
+    },
+    "find-skills-skill": {
+      "version": "1.0.0",
+      "installedAt": 1774494348142
+    },
+    "metacognition": {
+      "version": "1.1.2",
+      "installedAt": 1774625934776
+    },
+    "x-monitor": {
+      "version": "1.0.0",
+      "installedAt": 1774626446032
+    },
+    "jpeng-knowledge-graph-memory": {
+      "version": "1.0.0",
+      "installedAt": 1774626461416
     }
   }
 }

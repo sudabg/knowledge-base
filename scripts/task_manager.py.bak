@@ -1,0 +1,306 @@
+#!/usr/bin/env python3
+"""
+task_manager.py — 统一任务管理器（合并 sync + archive + cycle）
+
+取代：
+- dashboard/sync_completed_tasks.py
+- dashboard/archive_completed.py  
+- scripts/task_cycle.py
+
+功能（按执行顺序）：
+1. 扫描 memory log，同步已完成任务标记到 project-plans
+2. 检查全项目完成状态，归档到 P.md
+3. 检查短期任务完成度，触发进化循环生成新任务
+4. 更新派生文件（active.md 状态摘要）
+
+数据流：memory log → project-plans → P.md
+单一写入口，无冲突。
+
+用法：python3 scripts/task_manager.py [--dry-run]
+"""
+
+import re
+import sys
+import json
+from pathlib import Path
+from datetime import datetime, timedelta
+
+WORKSPACE = Path("/home/gem/workspace/agent/workspace")
+DOCS_DIR = WORKSPACE / "docs"
+MEMORY_DIR = WORKSPACE / "memory"
+LEARNINGS_DIR = WORKSPACE / ".learnings"
+P_MD = WORKSPACE / "P.md"
+
+def log(msg):
+    print(f"[{datetime.now().strftime('%H:%M:%S')}] {msg}")
+
+def get_today_plan():
+    today = datetime.now().strftime("%Y-%m-%d")
+    plan = DOCS_DIR / f"project-plans-{today}.md"
+    if plan.exists():
+        return plan
+    plans = sorted(DOCS_DIR.glob("project-plans-*.md"), reverse=True)
+    return plans[0] if plans else None
+
+# ═══════════════════════════════════════════
+# Step 1: 同步已完成任务
+# ═══════════════════════════════════════════
+
+def find_completed_task_ids():
+    """从 memory log 扫描已完成的 S-* 任务"""
+    completed = set()
+    today = datetime.now()
+    for i in range(2):  # 今日 + 昨日
+        d = (today - timedelta(days=i)).strftime("%Y-%m-%d")
+        mem_file = MEMORY_DIR / f"{d}.md"
+        if not mem_file.exists():
+            continue
+        content = mem_file.read_text()
+        patterns = [
+            r'✅\s*(?:\*\*)?(S-\d+)(?:\*\*)?\s*[:：]',
+            r'(S-\d+)\s*[:：].*(?:✅|完成|成功|全部完成)',
+            r'(?:完成|✅)\s*(?:\*\*)?(S-\d+)',
+            r'(S-\d+)\s*[:：].*(?:已发布|已推送|已创建|已撰写|已联系|已验证|已搜索|已设计|已研究|已测试|已更新|已完成)',
+        ]
+        for p in patterns:
+            for m in re.finditer(p, content):
+                completed.add(m.group(1))
+    return completed
+
+def sync_tasks(plan_path, dry_run=False):
+    """将 memory 中的完成状态同步到 project-plans"""
+    completed_ids = find_completed_task_ids()
+    if not completed_ids:
+        log("📋 Step1: 无新完成任务")
+        return 0
+    
+    content = plan_path.read_text()
+    new_content = content
+    marked = 0
+    
+    for tid in completed_ids:
+        pattern = rf'^(- \[) (\] {re.escape(tid)}:)'
+        replacement = rf'\1x\2'
+        new, count = re.subn(pattern, replacement, new_content, flags=re.MULTILINE)
+        if count > 0:
+            new_content = new
+            marked += count
+    
+    if marked > 0 and not dry_run:
+        plan_path.write_text(new_content)
+    
+    log(f"📋 Step1: {marked} 个任务标记完成 ({', '.join(sorted(completed_ids))})")
+    return marked
+
+# ═══════════════════════════════════════════
+# Step 2: 归档已完成项目
+# ═══════════════════════════════════════════
+
+def archive_projects(plan_path, dry_run=False):
+    """检查项目完成状态，归档到 P.md"""
+    content = plan_path.read_text()
+    
+    # 解析项目块
+    projects = []
+    current = None
+    for line in content.split('\n'):
+        proj_match = re.match(r'^##\s+项目[一二三四五六七八九十\d]+[：:]\s*(.+)$', line)
+        if proj_match:
+            if current:
+                projects.append(current)
+            current = {'title': proj_match.group(1).strip(), 'tasks': [], 'start_line': line}
+        elif current:
+            task_match = re.match(r'^-\s+\[([ x])\]\s+(.+)$', line)
+            if task_match:
+                current['tasks'].append({'done': task_match.group(1) == 'x', 'text': task_match.group(2)})
+    if current:
+        projects.append(current)
+    
+    fully_done = [p for p in projects if p['tasks'] and all(t['done'] for t in p['tasks'])]
+    
+    if not fully_done:
+        log(f"📦 Step2: 无完全完成的项目")
+        return 0
+    
+    # 写入 P.md
+    today = datetime.now().strftime("%Y-%m-%d")
+    sections = []
+    for p in fully_done:
+        tasks_text = "\n".join(f"- ✅ {t['text'][:80]}" for t in p['tasks'])
+        sections.append(f"""## ✅ {p['title']} — {today}
+
+**完成度**: {len(p['tasks'])}/{len(p['tasks'])} 任务
+
+**关键成果**:
+{tasks_text}
+
+---
+""")
+    
+    existing = P_MD.read_text() if P_MD.exists() else "# P.md — 已完成项目档案（倒序）\n\n> 最新完成的项目在最上方。\n\n---\n"
+    parts = existing.split("---", 2)
+    new_content = parts[0] + "---" + "\n" + "\n".join(sections) + "---" + (parts[2] if len(parts) >= 3 else "\n")
+    
+    if not dry_run:
+        P_MD.write_text(new_content)
+    
+    log(f"📦 Step2: {len(fully_done)} 个项目归档到 P.md")
+    return len(fully_done)
+
+# ═══════════════════════════════════════════
+# Step 3: 短期任务进化循环
+# ═══════════════════════════════════════════
+
+def parse_all_short_tasks(plan_path):
+    """解析所有 S-* 任务（去重）"""
+    content = plan_path.read_text()
+    tasks = []
+    seen = set()
+    for m in re.finditer(r'^- \[([ x])\]\s+(S-\d+):\s*(.+)$', content, re.MULTILINE):
+        tid = m.group(2)
+        if tid not in seen:
+            seen.add(tid)
+            tasks.append({'id': tid, 'done': m.group(1) == 'x', 'desc': m.group(3).strip()})
+    return tasks
+
+def get_evomap_tasks():
+    tasks = []
+    hb_file = LEARNINGS_DIR / "last_heartbeat.json"
+    if hb_file.exists():
+        try:
+            data = json.loads(hb_file.read_text())
+            for t in data.get('available_tasks', []):
+                tasks.append({
+                    'title': t.get('title', ''),
+                    'bounty': t.get('bounty_amount', 0),
+                    'slots': t.get('slots_remaining', 0)
+                })
+        except:
+            pass
+    return tasks
+
+def get_cycle_number():
+    if not P_MD.exists():
+        return 1
+    return len(re.findall(r'第\d+轮进化', P_MD.read_text())) + 1
+
+def evolution_cycle(plan_path, dry_run=False):
+    """短期任务接近完成时生成新任务"""
+    tasks = parse_all_short_tasks(plan_path)
+    if not tasks:
+        log("🔄 Step3: 无短期任务")
+        return False
+    
+    total = len(tasks)
+    done = sum(1 for t in tasks if t['done'])
+    remaining = total - done
+    
+    if remaining > 1:
+        log(f"🔄 Step3: 还剩 {remaining} 个任务，未触发循环")
+        return False
+    
+    log(f"🔄 Step3: {done}/{total} 完成，触发进化循环！")
+    
+    # 归档本轮到 P.md
+    cycle = get_cycle_number()
+    today = datetime.now().strftime("%Y-%m-%d")
+    results = "\n".join(f"- ✅ {t['id']}: {t['desc'][:80]}" for t in tasks if t['done'])
+    remaining_text = ""
+    not_done = [t for t in tasks if not t['done']]
+    if not_done:
+        remaining_text = "\n**未完成**:\n" + "\n".join(f"- ❌ {t['id']}: {t['desc'][:80]}" for t in not_done)
+    
+    section = f"""
+## ✅ 第{cycle}轮进化任务完成 🔄 — {today}
+
+**完成度**: {done}/{total} 任务
+
+**关键成果**:
+{results}
+{remaining_text}
+
+---
+"""
+    if not dry_run:
+        existing = P_MD.read_text()
+        parts = existing.split("---", 2)
+        P_MD.write_text(parts[0] + "---" + "\n" + section + "---" + (parts[2] if len(parts) >= 3 else "\n"))
+    
+    # 生成新任务（连续编号，避免和旧任务冲突）
+    evomap = get_evomap_tasks()
+    evo_sorted = sorted(evomap, key=lambda t: (t['bounty'], t['slots']), reverse=True)
+    
+    # 找到当前最大的 S-* 编号
+    all_existing = re.findall(r'S-(\d+)', plan_path.read_text())
+    max_num = max((int(n) for n in all_existing), default=0)
+    
+    new_tasks = []
+    if evo_sorted:
+        max_num += 1
+        new_tasks.append(f"- [ ] S-{max_num:02d}: 完成 EvoMap 任务: {evo_sorted[0]['title'][:35]}（关联 M-01-1）")
+    if len(evo_sorted) > 1:
+        max_num += 1
+        new_tasks.append(f"- [ ] S-{max_num:02d}: 完成 EvoMap 任务: {evo_sorted[1]['title'][:35]}（关联 M-01-1）")
+    
+    templates = [
+        "搜索并贡献 PR 到高星开源项目|M-01-3",
+        "撰写/发布 1 篇技术博客文章|M-01-4",
+        "更新 GitHub 项目 README 或文档|M-01-4",
+        "参与 2 个开源 issue 讨论|M-01-5",
+        "研究 1 个可产品化的技能方向|M-02-4",
+        "发布 1 条有商业价值的技术内容|M-02-5",
+        "创作 1 条高质量技术推文/帖子|M-03-1",
+        "设计或优化个人品牌元素|M-03-6",
+        "搜索 arXiv 最新论文准备 capsule 素材|M-01-4",
+        "整理近期 learnings 并更新知识库|M-01-4",
+        "检查并回复社交平台互动|M-03-2",
+    ]
+    
+    for tmpl in templates:
+        if len(new_tasks) >= 12:
+            break
+        max_num += 1
+        desc, ref = tmpl.split("|")
+        new_tasks.append(f"- [ ] S-{max_num:02d}: {desc}（关联 {ref}）")
+    
+    if not dry_run:
+        new_section = f"\n## 🔄 第{cycle}轮新任务（自动进化生成）\n\n" + "\n".join(new_tasks) + "\n"
+        plan_path.write_text(plan_path.read_text() + new_section)
+    
+    log(f"🔄 Step3: 第{cycle}轮完成，{len(new_tasks)} 个新任务已生成")
+    return True
+
+# ═══════════════════════════════════════════
+# Main
+# ═══════════════════════════════════════════
+
+def main():
+    dry_run = '--dry-run' in sys.argv
+    
+    log("═══ 统一任务管理器 ═══")
+    if dry_run:
+        log("🔍 DRY RUN 模式 — 不写入任何文件")
+    
+    plan_path = get_today_plan()
+    if not plan_path:
+        log("❌ 找不到 project-plans 文件")
+        return
+    
+    log(f"📄 数据源: {plan_path.name}")
+    
+    # Step 1: 同步完成标记
+    sync_tasks(plan_path, dry_run)
+    
+    # Step 2: 归档完成项目
+    archive_projects(plan_path, dry_run)
+    
+    # Step 3: 进化循环
+    evolution_cycle(plan_path, dry_run)
+    
+    # Step 4: 报告状态
+    tasks = parse_all_short_tasks(plan_path)
+    done = sum(1 for t in tasks if t['done'])
+    log(f"═══ 状态: {done}/{len(tasks)} 短期任务完成 ═══")
+
+if __name__ == '__main__':
+    main()

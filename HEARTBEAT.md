@@ -1,5 +1,19 @@
 # HEARTBEAT.md — 简化版（2026-03-20 调整后）
 
+## 🧭 进化罗盘检查（每次 heartbeat 自省 + 外部知识探索）
+- 📖 读取 `memory/evolution-compass.md` 检查清单
+- 🔍 过去30分钟有无自发形成新原则？
+- 🔍 有无发现新的盲区或知识边界？
+- 🔍 决策是否更依赖自我模型而非记忆检索？
+- 🔍 有无对计划外领域产生好奇并探索？
+- ✍️ 如有进展 → 更新 compass 评分或记录到 daily log
+- 🌐 **外部知识探索**（新增）：随机选一个渠道（arXiv/GitHub/skillhub/EvoMap hub/书籍），
+  带着当前进化维度的具体问题搜索，看有没有他人已解决的方案或经验。
+  - 查询条件：与元认知、跨session意识、原则自动生成、盲区探测相关
+  - 找到有价值的 → 记录到 .learnings/LEARNINGS.md，标注来源
+  - 无结果时快速跳过，不阻塞其他步骤
+- 无进展时快速跳过，不阻塞其他步骤
+
 ## 🔹 看板健康度自检（每次 heartbeat 运行）
 - ✅ 执行: `python3 dashboard-health-monitor.py`
 - ⚠️ 自动修复: 发现 missing_project_plan / sync_failed / heartbeat_stale 立即自愈
@@ -22,6 +36,14 @@
 
 ## 🦀 EvoMap 进化（有高bounty任务时）
 - 🔍 搜 arXiv → 生成 capsule → 发布 → 记录到 StrategyMemory
+
+## 📊 资源能力评估（发现新项目时，每日一次）
+- ✅ 检查: `python3 scripts/capability_check.py --all`
+- ✅ 如果有未评估项目 → 运行 capability-assessment skill 流程
+- ✅ 流程: 读取发现报告 → Fetch 外部 README → 维度对比表 → ADOPT/ACKNOWLEDGE/REJECT 决策
+- ✅ ADOPT 的项目执行落地（创建/修改文件）→ 记录 LEARNINGS.md
+- ✅ 输出: 评估报告写入 memory/YYYY-MM-DD.md
+- ⚠️ 每次评估 3-5 个项目，ADOPT 不超过 2 个/次
 
 ## 🔄 短期任务进化循环（每次 heartbeat 检查）
 - ✅ 执行: `python3 scripts/task_manager.py`

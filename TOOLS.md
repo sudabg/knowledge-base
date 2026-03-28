@@ -87,12 +87,19 @@ Add whatever helps you do your job. This is your cheat sheet.
 
 ## 内网穿透
 
-- **Cloudflared 二进制**: `/tmp/cloudflared` (v2024.12.2)
+- **Cloudflared 二进制**: `/tmp/cloudflared` (v2026.3.0)
 - **Quick Tunnel**: `nohup /tmp/cloudflared tunnel --url http://localhost:8888 > /tmp/cloudflared-tunnel.log 2>&1 &`
 - **获取 URL**: `grep -o 'https://[a-z0-9-]*\.trycloudflare\.com' /tmp/cloudflared-tunnel.log | tail -1`
-- **限制**: trycloudflare.com URL 每次重启会变，不能绑自有域名(CNAME→1014)
-- **固定域名方案**: 需要 Cloudflare Named Tunnel（要求 Global API Key 或 Account Tunnel Edit 权限的 Token）
-- **DNS 管理**: `openbot.indevs.in` Zone ID `787420b4dd4956ec896bb93afa7fd989`，Token 已有 DNS 编辑权限
+
+### 固定域名（Named Tunnel）
+- **Account ID**: `00e520867c009132e729e3aed44a4b8e`
+- **Zone ID**: `787420b4dd4956ec896bb93afa7fd989` (`openbot.indevs.in`)
+- **凭据文件**: `/home/gem/.cloudflared/.env` (chmod 600, `source` 后取 CF_API_TOKEN)
+- **当前隧道**: `dashboard-final` (ID: `2e73a9c5-65d0-4692-8581-0de7dfb26f84`)
+- **配置**: `/home/gem/.cloudflared/config.yml`
+- **域名映射**: `dashboard.openbot.indevs.in → localhost:8888`, `blog.openbot.indevs.in → localhost:8080`
+- **启动**: `nohup /tmp/cloudflared tunnel --config /home/gem/.cloudflared/config.yml run > /tmp/cloudflared-tunnel-final.log 2>&1 &`
+- **自动化脚本**: `scripts/cloudflare-named-tunnel.sh`（需 source `.env` 后执行）
 
 ## GitHub
 
@@ -208,10 +215,11 @@ evo = {
 }
 ```
 
-### asset_id 计算
+### asset_id 计算（⚠️ 必须 ensure_ascii=False）
 1. 创建对象(不含asset_id字段)
-2. JSON.dumps with sort_keys=True, separators=(',',':')
+2. `json.dumps(sort_keys=True, separators=(',', ':'), ensure_ascii=False)` → encode('utf-8')
 3. SHA256哈希 → "sha256:" + hex_digest
+4. **注意**: Hub 用 UTF-8 解码验证，ensure_ascii=True 会导致中文内容 hash 不匹配
 
 ### 载荷格式
 ```python
@@ -295,6 +303,50 @@ payload = {
 - 服务器响应正常（非 429）
 - 心跳成功
 - 至少等待 5 分钟后重试
+
+## EvoMap Evolver 协议适配（2026-03-24 新增）
+
+### 协议变更历史
+- **3/22**: evolver 仓库连发 5 个版本 (v1.33→v1.36)，触发协议重大变更
+- **3/23**: 确认新协议——所有发布端点需 GEP-A2A envelope 封装（7 个必填字段）
+- **3/24**: 节点状态 API 路由变更（`/api/nodes/` 不再可用），需适配
+
+### GEP-A2A Envelope 格式 (v1.0.0)
+```json
+{
+  "protocol": "gep-a2a",
+  "protocol_version": "1.0.0",
+  "message_type": "publish",
+  "message_id": "msg_<timestamp>_<random>",
+  "sender_id": "node_db2f95ffdba95eb6",
+  "timestamp": "2026-03-24T18:00:00Z",
+  "payload": { /* bundle 载荷 */ }
+}
+```
+
+### 端点适配规则
+| 端点 | 方法 | 需要 Envelope | 说明 |
+|------|------|---------------|------|
+| `/a2a/heartbeat` | POST | ❌ | REST 直传，无需 envelope |
+| `/a2a/nodes/{NODE_ID}` | GET | ❌ | REST 直传 |
+| `/a2a/task/list` | GET | ❌ | REST 直传 |
+| `/a2a/publish` | POST | ✅ | **必须**用 envelope 封装 bundle |
+
+### 适配脚本
+- **位置**: `scripts/evomap_a2a.py`
+- **功能**: heartbeat / status / tasks / publish
+- **用法**: `python3 scripts/evomap_a2a.py heartbeat`
+- **环境变量**: `EVOMAP_NODE_ID`, `EVOMAP_NODE_SECRET`
+
+### Schema 版本演进
+- v1.5.0: 当前稳定版（triple assets: Gene + Capsule + EvolutionEvent）
+- v1.6.0: evolver 最新版，需 HMAC-SHA256 签名（尚未迁移）
+
+### 宕机恢复策略（经验）
+- EvoMap 服务器 3/22 宕机 ~25h 后部分恢复
+- 恢复优先级：读端点 → 写端点（间歇性）
+- 降级逻辑：心跳超时 → 跳过发布，执行其他任务
+- 待发布 capsule 存 `.learnings/pending_capsule.json`，恢复后批量发布
 
 ## 飞书知识库更新规则（2026-03-18 新增）
 

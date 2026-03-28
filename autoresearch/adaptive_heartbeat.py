@@ -51,7 +51,21 @@ def load_state():
         with open(STATE_FILE) as f:
             return json.load(f)
     return {"heartbeat_failures": 0, "hello_failures": 0, "last_success": None, "last_endpoint": None, "backoff_until": None}
+    try:
+        with open(STATE_FILE) as f:
+            state = json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        state = {"heartbeat_failures": 0, "hello_failures": 0, "last_success": None, "last_endpoint": None, "backoff_until": None}
 
+    # 确保数值字段是整数
+    int_fields = ["heartbeat_failures", "hello_failures"]
+    for field in int_fields:
+        if field in state and not isinstance(state[field], int):
+            try:
+                state[field] = int(state[field])
+            except (ValueError, TypeError):
+                state[field] = 0
+    return state
 def save_state(state):
     os.makedirs(os.path.dirname(STATE_FILE), exist_ok=True)
     with open(STATE_FILE, "w") as f:
@@ -61,32 +75,44 @@ def api_call(endpoint):
     """调用 EvoMap API"""
     ts = datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
     msg_id = f"msg_hb_{int(time.time())}_{os.urandom(4).hex()}"
-    
+
     try:
         url = f"{HUB}{endpoint}"
-        # 根据端点准备请求体
+
+        # 根据端点准备请求体 - 使用 GEP-A2A envelope 格式
         if endpoint == "/a2a/heartbeat":
-            payload = {
-                "node_id": NODE_ID,
+            envelope = {
+                "protocol": "gep-a2a",
+                "protocol_version": "1.0.0",
+                "message_type": "heartbeat",
+                "message_id": msg_id,
+                "sender_id": NODE_ID,
                 "timestamp": ts,
-                "msg_id": msg_id
+                "payload": {}
             }
-            data = json.dumps(payload).encode('utf-8')
+            data = json.dumps(envelope).encode('utf-8')
         elif endpoint == "/a2a/hello":
-            payload = {
-                "node_id": NODE_ID,
+            envelope = {
+                "protocol": "gep-a2a",
+                "protocol_version": "1.0.0",
+                "message_type": "hello",
+                "message_id": msg_id,
+                "sender_id": NODE_ID,
                 "timestamp": ts,
-                "msg_id": msg_id
+                "payload": {
+                    "node_id": NODE_ID,
+                    "model": "openrouter/stepfun/step-3.5-flash:free",
+                    "version": "1.0.0"
+                }
             }
-            data = json.dumps(payload).encode('utf-8')
+            data = json.dumps(envelope).encode('utf-8')
         else:
             data = b''
-        
-        req = urllib.request.Request(url, data=data if data else None, method="POST")
+
+        req = urllib.request.Request(url, data=data, method="POST")
         req.add_header("Authorization", f"Bearer {TOKEN}")
-        if data:
-            req.add_header("Content-Type", "application/json")
-        
+        req.add_header("Content-Type", "application/json")
+
         with urllib.request.urlopen(req, timeout=30) as response:
             data = json.loads(response.read().decode())
             
@@ -106,31 +132,55 @@ def api_call(endpoint):
                 
                 if node:
                     credit = node.get("credit_balance") or node.get("credit", 0)
-                    rep = node.get("reputation_score", 0)
                     tasks = node.get("available_tasks", [])
-                    
+
+                    # 额外获取节点统计数据（reputation, published, promoted 等）
+                    node_stats = {}
+                    try:
+                        node_url = f"{HUB}/a2a/nodes/{NODE_ID}"
+                        node_req = urllib.request.Request(node_url)
+                        node_req.add_header("Authorization", f"Bearer {TOKEN}")
+                        with urllib.request.urlopen(node_req, timeout=15) as nr:
+                            node_stats = json.loads(nr.read().decode())
+                    except Exception as ne:
+                        logger.error(f"节点API获取失败: {ne}")
+
+                    rep = node_stats.get("reputation_score", 0)
+
                     cache_file = os.path.expanduser("~/workspace/agent/workspace/.learnings/last_heartbeat.json")
+                    # 读取旧缓存，保留 dashboard_sync 等字段
+                    old_cache = {}
+                    if os.path.exists(cache_file):
+                        try:
+                            with open(cache_file) as f:
+                                old_cache = json.load(f)
+                        except:
+                            pass
+
                     cache = {
-                        "status": "active",
-                        "survival": "alive",
+                        "timestamp": datetime.now().isoformat(),
+                        "status": node_stats.get("status", "active"),
+                        "survival": node_stats.get("survival_status", "alive"),
                         "credit": credit,
+                        "credit_balance": credit,
                         "reputation_score": rep,
-                        "total_published": node.get("total_published", 0),
-                        "total_promoted": node.get("total_promoted", 0),
-                        "total_rejected": node.get("total_rejected", 0),
-                        "reputation_penalty": node.get("reputation_penalty", 0),
-                        "quarantine_strikes": node.get("quarantine_strikes", 0),
+                        "reputation_penalty": node_stats.get("reputation_penalty", 0),
+                        "quarantine_strikes": node_stats.get("quarantine_strikes", 0),
+                        "total_published": node_stats.get("total_published", 0),
+                        "total_promoted": node_stats.get("total_promoted", 0),
+                        "total_rejected": node_stats.get("total_rejected", 0),
+                        "avg_confidence": node_stats.get("avg_confidence", 0),
+                        "symbiosis_score": node_stats.get("symbiosis_score", 0),
                         "tasks_count": len(tasks),
-                        "available_tasks": [
-                            {"task_id": t.get("task_id", ""), "topic": t.get("topic", ""), "bounty": t.get("bounty", 0)}
-                            for t in tasks[:10]
-                        ],
-                        "highest_bounty": max((t.get("bounty", 0) for t in tasks), default=0),
-                        "updated": datetime.now().strftime("%H:%M")
+                        "available_tasks": tasks[:10],
+                        "highest_bounty": max((t.get("bounty_amount", t.get("bounty", 0)) for t in tasks), default=0),
+                        # 保留同步数据
+                        "dashboard_sync": old_cache.get("dashboard_sync", {}),
+                        "updated": datetime.now().strftime("%H:%M:%S")
                     }
                     with open(cache_file, "w") as f:
-                        json.dump(cache, f)
-                    
+                        json.dump(cache, f, indent=2, ensure_ascii=False)
+
                     logger.success(f"✅ heartbeat: credit={credit} rep={rep} tasks={len(tasks)}")
                     return cache
                 

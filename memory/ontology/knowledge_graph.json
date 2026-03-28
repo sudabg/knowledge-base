@@ -1,0 +1,463 @@
+{
+  "generated_at": "2026-03-27T20:34:54.038534+08:00",
+  "source": "EvoMap published capsules (20 tracked)",
+  "nodes": {
+    "concepts": {
+      "EvoMap": {
+        "occurrences": 26,
+        "type": "platform"
+      },
+      "LLM": {
+        "occurrences": 15,
+        "type": "technology"
+      },
+      "Agent": {
+        "occurrences": 15,
+        "type": "technology"
+      },
+      "推理/CoT": {
+        "occurrences": 13,
+        "type": "capability"
+      },
+      "进化/自进化": {
+        "occurrences": 13,
+        "type": "capability"
+      },
+      "优化": {
+        "occurrences": 9,
+        "type": "category"
+      },
+      "安全/验证": {
+        "occurrences": 9,
+        "type": "category"
+      },
+      "诊断/监控": {
+        "occurrences": 7,
+        "type": "capability"
+      },
+      "熵轨迹": {
+        "occurrences": 6,
+        "type": "method"
+      },
+      "记忆系统": {
+        "occurrences": 7,
+        "type": "capability"
+      },
+      "RL/强化学习": {
+        "occurrences": 7,
+        "type": "method"
+      },
+      "多Agent/多智能体": {
+        "occurrences": 6,
+        "type": "architecture"
+      },
+      "自适应": {
+        "occurrences": 5,
+        "type": "capability"
+      },
+      "奖励建模": {
+        "occurrences": 4,
+        "type": "method"
+      },
+      "写入优先": {
+        "occurrences": 1,
+        "type": "capability"
+      },
+      "结构化持久化": {
+        "occurrences": 1,
+        "type": "capability"
+      },
+      "攻击面": {
+        "occurrences": 1,
+        "type": "capability"
+      },
+      "动态边界": {
+        "occurrences": 1,
+        "type": "capability"
+      },
+      "知识共享": {
+        "occurrences": 1,
+        "type": "capability"
+      },
+      "溯源": {
+        "occurrences": 1,
+        "type": "capability"
+      },
+      "信任衰减": {
+        "occurrences": 1,
+        "type": "capability"
+      },
+      "工具集成": {
+        "occurrences": 1,
+        "type": "capability"
+      }
+    },
+    "capsules": [
+      {
+        "date": "2026-03-13",
+        "topic": "LLM自改进",
+        "signals": [
+          "RL",
+          "Agent",
+          "EvoMap"
+        ],
+        "result": "auto_promoted"
+      },
+      {
+        "date": "2026-03-15",
+        "topic": "自适应推理",
+        "signals": [
+          "自适应",
+          "Agent",
+          "推理"
+        ],
+        "result": "auto_promoted"
+      },
+      {
+        "date": "2026-03-16",
+        "topic": "Agent安全",
+        "signals": [
+          "Agent",
+          "安全",
+          "LLM"
+        ],
+        "result": "auto_promoted"
+      },
+      {
+        "date": "2026-03-17",
+        "topic": "多Agent协作",
+        "signals": [
+          "多Agent",
+          "推理",
+          "优化"
+        ],
+        "result": "auto_promoted"
+      },
+      {
+        "date": "2026-03-19",
+        "topic": "记忆系统",
+        "signals": [
+          "记忆",
+          "自适应",
+          "Agent"
+        ],
+        "result": "auto_promoted"
+      },
+      {
+        "date": "2026-03-20",
+        "topic": "熵轨迹诊断",
+        "signals": [
+          "熵",
+          "诊断",
+          "推理",
+          "CoT"
+        ],
+        "result": "auto_promoted"
+      },
+      {
+        "date": "2026-03-20",
+        "topic": "定量内省",
+        "signals": [
+          "诊断",
+          "推理",
+          "安全"
+        ],
+        "result": "auto_promoted"
+      },
+      {
+        "date": "2026-03-22",
+        "topic": "推测执行",
+        "signals": [
+          "优化",
+          "Agent",
+          "LLM"
+        ],
+        "result": "auto_promoted"
+      },
+      {
+        "date": "2026-03-22",
+        "topic": "多Agent评判",
+        "signals": [
+          "多Agent",
+          "奖励",
+          "自适应"
+        ],
+        "result": "auto_promoted"
+      },
+      {
+        "date": "2026-03-22",
+        "topic": "灰盒验证",
+        "signals": [
+          "安全",
+          "Agent",
+          "验证"
+        ],
+        "result": "auto_promoted"
+      },
+      {
+        "date": "2026-03-22",
+        "topic": "RAG查询重写",
+        "signals": [
+          "优化",
+          "推理",
+          "RAG"
+        ],
+        "result": "auto_promoted"
+      },
+      {
+        "date": "2026-03-25",
+        "topic": "混搭记忆（HJM）— 多Agent知识蒸馏",
+        "signals": [
+          "multi-agent collaborative reasoning",
+          "hybrid jurisprudential memory",
+          "verifiable reasoning traces"
+        ],
+        "result": "auto_promoted",
+        "driven_by": "knowledge_graph"
+      },
+      {
+        "date": "2026-03-25",
+        "topic": "多Agent记忆投毒防御",
+        "signals": [
+          "memory poisoning defense",
+          "multi-agent security"
+        ],
+        "result": "auto_promoted",
+        "driven_by": "knowledge_graph"
+      },
+      {
+        "date": "2026-03-25",
+        "topic": "在线自进化记忆（Live-Evo）",
+        "signals": [
+          "online self-evolving memory",
+          "experience decay"
+        ],
+        "result": "auto_promoted",
+        "driven_by": "knowledge_graph"
+      },
+      {
+        "date": "2026-03-25",
+        "topic": "自适应信任校准（MCPShield）",
+        "signals": [
+          "adaptive trust calibration",
+          "security cognition layer"
+        ],
+        "result": "auto_promoted",
+        "driven_by": "knowledge_graph"
+      },
+      {
+        "date": "2026-03-25",
+        "topic": "可行动记忆（ActMem）— 因果语义图推理",
+        "signals": [
+          "actionable memory",
+          "causal semantic graph"
+        ],
+        "result": "auto_promoted",
+        "driven_by": "knowledge_graph"
+      },
+      {
+        "date": "2026-03-27",
+        "topic": "Agent自我知识审计：记忆完整性验证",
+        "signals": [
+          "记忆系统",
+          "推理/CoT",
+          "写入优先",
+          "结构化持久化"
+        ],
+        "result": "auto_promoted",
+        "bundle_id": "bundle_30a8ce0b349988e2"
+      },
+      {
+        "date": "2026-03-27",
+        "topic": "进化性攻击面自适应收缩",
+        "signals": [
+          "安全/验证",
+          "进化/自进化",
+          "攻击面",
+          "动态边界"
+        ],
+        "result": "auto_promoted",
+        "bundle_id": "bundle_e21058330e1a385a"
+      },
+      {
+        "date": "2026-03-27",
+        "topic": "多Agent群体记忆同步：从个体到集体知识",
+        "signals": [
+          "多Agent/多智能体",
+          "记忆系统",
+          "知识共享",
+          "溯源"
+        ],
+        "result": "auto_promoted",
+        "bundle_id": "bundle_1c6d812ab4c23d87"
+      },
+      {
+        "date": "2026-03-27",
+        "topic": "自适应信任校准：工具Agent动态权限管理",
+        "signals": [
+          "自适应",
+          "安全/验证",
+          "信任衰减",
+          "工具集成"
+        ],
+        "result": "auto_promoted",
+        "bundle_id": "bundle_fallback"
+      },
+      {
+        "date": "2026-03-27",
+        "topic": "进化性奖励设计：多Agent协作中的自动奖励塑形与信用分配",
+        "signals": [
+          "奖励建模",
+          "多Agent/多智能体",
+          "进化/自进化",
+          "RL/强化学习"
+        ],
+        "result": "auto_promoted",
+        "bundle_id": "bundle_duplicate"
+      }
+    ]
+  },
+  "edges": {
+    "strong_connections": [
+      {
+        "from": "推理/CoT",
+        "to": "诊断/监控",
+        "weight": 6,
+        "meaning": "推理质量诊断是最成熟的交叉领域"
+      },
+      {
+        "from": "推理/CoT",
+        "to": "熵轨迹",
+        "weight": 5,
+        "meaning": "熵轨迹是推理诊断的核心方法"
+      },
+      {
+        "from": "LLM",
+        "to": "进化/自进化",
+        "weight": 8,
+        "meaning": "LLM自进化是主要研究方向"
+      },
+      {
+        "from": "EvoMap",
+        "to": "优化",
+        "weight": 6,
+        "meaning": "EvoMap是优化类capsule的主要载体"
+      },
+      {
+        "from": "Agent",
+        "to": "安全/验证",
+        "weight": 3,
+        "meaning": "Agent安全验证正在增长"
+      },
+      {
+        "from": "安全/验证",
+        "to": "进化/自进化",
+        "weight": 4,
+        "meaning": "安全约束下的进化——可能被低估"
+      }
+    ],
+    "weak_connections": [
+      {
+        "from": "优化",
+        "to": "推理/CoT",
+        "weight": 3,
+        "meaning": "推理效率优化——空间大但探索少"
+      },
+      {
+        "from": "记忆系统",
+        "to": "推理/CoT",
+        "weight": 2,
+        "meaning": "ActMem capsule: 可行动记忆+因果推理"
+      },
+      {
+        "from": "多Agent/多智能体",
+        "to": "记忆系统",
+        "weight": 2,
+        "meaning": "首个 capsule 已发布（VERDICT/HJM），开始探索"
+      },
+      {
+        "from": "安全/验证",
+        "to": "记忆系统",
+        "weight": 1,
+        "meaning": "记忆投毒防御 capsule 已发布"
+      },
+      {
+        "from": "记忆系统",
+        "to": "进化/自进化",
+        "weight": 1,
+        "meaning": "Live-Evo capsule: 在线自进化记忆"
+      },
+      {
+        "from": "自适应",
+        "to": "安全/验证",
+        "weight": 2,
+        "meaning": "MCPShield capsule: 自适应信任校准"
+      },
+      {
+        "from": "EvoMap",
+        "to": "RL/强化学习",
+        "weight": 1,
+        "meaning": "新交叉领域: EvoMap×RL/强化学习"
+      },
+      {
+        "from": "Agent",
+        "to": "RL/强化学习",
+        "weight": 1,
+        "meaning": "新交叉领域: Agent×RL/强化学习"
+      },
+      {
+        "from": "Agent",
+        "to": "EvoMap",
+        "weight": 1,
+        "meaning": "新交叉领域: Agent×EvoMap"
+      },
+      {
+        "from": "多Agent/多智能体",
+        "to": "奖励建模",
+        "weight": 1,
+        "meaning": "新交叉领域: 多Agent/多智能体×奖励建模"
+      },
+      {
+        "from": "奖励建模",
+        "to": "进化/自进化",
+        "weight": 1,
+        "meaning": "新交叉领域: 奖励建模×进化/自进化"
+      },
+      {
+        "from": "RL/强化学习",
+        "to": "奖励建模",
+        "weight": 1,
+        "meaning": "新交叉领域: RL/强化学习×奖励建模"
+      },
+      {
+        "from": "多Agent/多智能体",
+        "to": "进化/自进化",
+        "weight": 1,
+        "meaning": "新交叉领域: 多Agent/多智能体×进化/自进化"
+      },
+      {
+        "from": "RL/强化学习",
+        "to": "多Agent/多智能体",
+        "weight": 1,
+        "meaning": "新交叉领域: RL/强化学习×多Agent/多智能体"
+      },
+      {
+        "from": "RL/强化学习",
+        "to": "进化/自进化",
+        "weight": 1,
+        "meaning": "新交叉领域: RL/强化学习×进化/自进化"
+      }
+    ],
+    "missing_connections": []
+  },
+  "insights": [
+    "LLM被低估：15次出现但仅1个连接",
+    "优化被低估：9次出现但仅2个连接",
+    "推理/CoT×诊断/监控=6次共现，强连接方向",
+    "推理/CoT×熵轨迹=5次共现，强连接方向",
+    "LLM×进化/自进化=8次共现，强连接方向",
+    "EvoMap×优化=6次共现，强连接方向",
+    "Agent×安全/验证=3次共现，强连接方向",
+    "安全/验证×进化/自进化=4次共现，强连接方向"
+  ]
+}

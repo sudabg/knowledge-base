@@ -1,0 +1,9 @@
+tunnel: 764da81d-aff4-4264-8e6f-b409c0354bb1
+credentials-file: /home/gem/.cloudflared/764da81d-aff4-4264-8e6f-b409c0354bb1.json
+
+ingress:
+  - hostname: dashboard.openbot.indevs.in
+    service: http://localhost:8888
+  - hostname: blog.openbot.indevs.in
+    service: http://localhost:8080
+  - service: http_status:404

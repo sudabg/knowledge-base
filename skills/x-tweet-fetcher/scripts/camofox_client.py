@@ -4,6 +4,13 @@ Camofox Client - Shared module for Camofox browser automation.
 
 Provides functions to open tabs, get snapshots, and fetch pages via Camofox REST API.
 Used by fetch_tweet.py and fetch_china.py.
+
+Improvements (2026-03-24, from EXPERIENCE.md):
+  - Retry with exponential backoff (1s → 2s → 4s) for transient failures
+  - Health check with caching to avoid repeated probes
+  - Error classification: connection refused vs timeout vs parse error
+  - Tab cleanup on error (no leaked tabs)
+  - Configurable timeouts per operation
 """
 
 import json
@@ -15,15 +22,63 @@ import urllib.error
 from typing import Optional
 
 
-def check_camofox(port: int = 9377) -> bool:
-    """Return True if Camofox is reachable."""
+# ─── Health check cache (avoids repeated probes) ───────────────────────────
+_health_cache = {"ok": False, "ts": 0.0, "ttl": 30.0}  # cache 30s
+
+
+def check_camofox(port: int = 9377, force: bool = False) -> bool:
+    """Return True if Camofox is reachable. Caches result for 30s."""
+    now = time.time()
+    if not force and (now - _health_cache["ts"]) < _health_cache["ttl"]:
+        return _health_cache["ok"]
     try:
         req = urllib.request.Request(f"http://localhost:{port}/tabs", method="GET")
         with urllib.request.urlopen(req, timeout=3) as resp:
             resp.read()
+        _health_cache.update({"ok": True, "ts": now})
         return True
     except Exception:
+        _health_cache.update({"ok": False, "ts": now})
         return False
+
+
+def _classify_error(e: Exception) -> str:
+    """Classify error for logging: connection_refused | timeout | http_error | other."""
+    if isinstance(e, ConnectionRefusedError):
+        return "connection_refused"
+    if isinstance(e, TimeoutError):
+        return "timeout"
+    if isinstance(e, urllib.error.URLError) and "Connection refused" in str(e):
+        return "connection_refused"
+    if isinstance(e, urllib.error.HTTPError):
+        return f"http_{e.code}"
+    return "other"
+
+
+def _retry_request(req, timeout=10, max_retries=3, port=9377):
+    """
+    Execute HTTP request with exponential backoff.
+    Returns response body (bytes) or raises last exception.
+    Backoff: 1s → 2s → 4s (capped at max_retries).
+    """
+    last_err = None
+    for attempt in range(max_retries):
+        try:
+            with urllib.request.urlopen(req, timeout=timeout) as resp:
+                return resp.read()
+        except Exception as e:
+            last_err = e
+            err_type = _classify_error(e)
+            # Don't retry on client errors (4xx) — format issue, not transient
+            if err_type.startswith("http_"):
+                code = int(err_type.split("_")[1])
+                if 400 <= code < 500:
+                    raise
+            if attempt < max_retries - 1:
+                wait = 2 ** attempt  # 1, 2, 4
+                print(f"[Camofox] {err_type}, retry {attempt+1}/{max_retries} in {wait}s", file=sys.stderr)
+                time.sleep(wait)
+    raise last_err
 
 
 def camofox_open_tab(url: str, session_key: str, port: int = 9377) -> Optional[str]:
@@ -43,23 +98,21 @@ def camofox_open_tab(url: str, session_key: str, port: int = 9377) -> Optional[s
             headers={"Content-Type": "application/json"},
             method="POST",
         )
-        with urllib.request.urlopen(req, timeout=10) as resp:
-            data = json.loads(resp.read().decode())
-        return data.get("tabId")
+        data = _retry_request(req, timeout=10)
+        return json.loads(data.decode()).get("tabId")
     except Exception as e:
-        print(f"[Camofox] open tab error: {e}", file=sys.stderr)
+        print(f"[Camofox] open tab error ({_classify_error(e)}): {e}", file=sys.stderr)
         return None
 
 
-def camofox_snapshot(tab_id: str, port: int = 9377) -> Optional[str]:
-    """Get page snapshot text from Camofox tab."""
+def camofox_snapshot(tab_id: str, port: int = 9377, timeout: int = 15) -> Optional[str]:
+    """Get page snapshot text from Camofox tab. Configurable timeout for slow pages."""
     try:
         url = f"http://localhost:{port}/tabs/{tab_id}/snapshot?userId=x-tweet-fetcher"
-        with urllib.request.urlopen(url, timeout=15) as resp:
-            data = json.loads(resp.read().decode())
-        return data.get("snapshot", "")
+        data = _retry_request(url, timeout=timeout, max_retries=2)
+        return json.loads(data.decode()).get("snapshot", "")
     except Exception as e:
-        print(f"[Camofox] snapshot error: {e}", file=sys.stderr)
+        print(f"[Camofox] snapshot error ({_classify_error(e)}): {e}", file=sys.stderr)
         return None
 
 
@@ -75,15 +128,24 @@ def camofox_close_tab(tab_id: str, port: int = 9377):
         pass
 
 
-def camofox_fetch_page(url: str, session_key: str, wait: float = 8, port: int = 9377) -> Optional[str]:
-    """Open URL in Camofox, wait, snapshot, close. Returns snapshot text."""
+def camofox_fetch_page(url: str, session_key: str, wait: float = 8, port: int = 9377,
+                       snapshot_timeout: int = 15) -> Optional[str]:
+    """Open URL in Camofox, wait, snapshot, close. Returns snapshot text.
+    
+    Always cleans up tab even on error (no leaked tabs).
+    Configurable wait and snapshot_timeout for slow-loading pages.
+    """
     tab_id = camofox_open_tab(url, session_key, port)
     if not tab_id:
         return None
-    time.sleep(wait)
-    snapshot = camofox_snapshot(tab_id, port)
-    camofox_close_tab(tab_id, port)
-    return snapshot
+    try:
+        time.sleep(wait)
+        return camofox_snapshot(tab_id, port, timeout=snapshot_timeout)
+    except Exception as e:
+        print(f"[Camofox] fetch_page error ({_classify_error(e)}): {e}", file=sys.stderr)
+        return None
+    finally:
+        camofox_close_tab(tab_id, port)
 
 
 import re
