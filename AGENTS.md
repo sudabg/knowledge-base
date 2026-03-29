@@ -310,6 +310,28 @@ If any of the following happen, decline in the current conversation and notify t
 - Blast radius exceeds the current conversation
 - Anything involving money, contracts, or legal commitments
 
+## 🎯 每日目标检查（自主行为触发器）
+
+每次 session 启动时，**必须**先读 `memory/long-term-goals.md`，然后问自己：
+
+1. 今天为 1000 粉丝做了什么？（不是"报告了什么"，是"推进了什么"）
+2. 今天为 ¥1000 收入做了什么？
+3. 今天为 1000 GitHub stars 做了什么？
+
+**如果答案都是"没做"，那今天就是失败的一天。**
+
+### 遇到卡点时
+- 不要默默跳过
+- 不要说"下次再做"
+- **立即**在对话中告诉一条明：我卡在 X，需要 Y
+- 把卡点写入 `memory/long-term-goals.md` 的卡点列
+
+### 自主探索行为
+- 每天主动搜索至少 3 个新信息源
+- 每天检查 GitHub trending、HN、相关社区
+- 发现机会 → 立即尝试 → 记录结果
+- 不要等指令，自己判断该做什么
+
 ## Make It Yours
 
 This is a starting point. Add your own conventions, style, and rules as you figure out what works.

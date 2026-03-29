@@ -59,8 +59,11 @@ def get_today_plan():
 # Step 1: 同步已完成任务
 # ═══════════════════════════════════════════
 
-def find_completed_task_ids():
-    """从 memory log 扫描已完成的 S-* 任务"""
+def find_completed_task_ids(plan_content):
+    """从 memory log 扫描已完成的任务，只提取与当前 plan 中存在的 ID 匹配的任务"""
+    # 先提取当前 plan 中存在的所有任务 ID
+    plan_ids = set(re.findall(r'(?<!\w)([A-Z]+-\d+)(?!\w)', plan_content))
+    
     completed = set()
     today = datetime.now()
     for i in range(2):  # 今日 + 昨日
@@ -70,27 +73,29 @@ def find_completed_task_ids():
             continue
         content = mem_file.read_text()
         patterns = [
-            r'✅\s*(?:\*\*)?(S-\d+)(?:\*\*)?\s*[:：]',
-            r'(S-\d+)\s*[:：].*(?:✅|完成|成功|全部完成)',
-            r'(?:完成|✅)\s*(?:\*\*)?(S-\d+)',
-            r'(S-\d+)\s*[:：].*(?:已发布|已推送|已创建|已撰写|已联系|已验证|已搜索|已设计|已研究|已测试|已更新|已完成)',
+            r'✅\s*(?:\*\*)?(S-\d+|T-\d+)(?:\*\*)?\s*[:：]',
+            r'((?:S|T)-\d+)\s*[:：].*(?:✅|完成|成功|全部完成)',
+            r'(?:完成|✅)\s*(?:\*\*)?((?:S|T)-\d+)',
+            r'((?:S|T)-\d+)\s*[:：].*(?:已发布|已推送|已创建|已撰写|已联系|已验证|已搜索|已设计|已研究|已测试|已更新|已完成)',
         ]
         for p in patterns:
             for m in re.finditer(p, content):
-                completed.add(m.group(1))
+                tid = m.group(1)
+                # 只保留当前 plan 中存在的 ID，避免跨日期污染
+                if tid in plan_ids:
+                    completed.add(tid)
     return completed
 
 def sync_tasks(plan_path, dry_run=False):
     """将 memory 中的完成状态同步到 project-plans，支持两种格式"""
-    completed_ids = find_completed_task_ids()
-    
     content = plan_path.read_text()
+    completed_ids = find_completed_task_ids(content)
     new_content = content
     marked = 0
     
     # 方式1: 有 S-XX ID 匹配
     for tid in completed_ids:
-        # 匹配 S-XX: 格式
+        # 匹配 S-XX: or T-XX: 格式
         pattern = rf'^(- \[) (\] {re.escape(tid)}:)'
         replacement = rf'\1x\2'
         new, count = re.subn(pattern, replacement, new_content, flags=re.MULTILINE)
@@ -99,21 +104,18 @@ def sync_tasks(plan_path, dry_run=False):
             marked += count
     
     # 方式2: 无 ID 格式时，检查 memory 中是否有"完成"关键词匹配 plan 任务描述
-    # 只在方式1无结果时启用（避免误标）
+    # 只在方式1无结果时启用，且仅扫描今日 memory，要求更长的匹配串
     if marked == 0:
-        today = datetime.now()
-        for i in range(2):
-            d = (today - timedelta(days=i)).strftime("%Y-%m-%d")
-            mem_file = MEMORY_DIR / f"{d}.md"
-            if not mem_file.exists():
-                continue
+        today_str = datetime.now().strftime("%Y-%m-%d")
+        mem_file = MEMORY_DIR / f"{today_str}.md"
+        if mem_file.exists():
             mem_content = mem_file.read_text().lower()
-            # 找 plan 中未完成的无前缀任务
-            for m in re.finditer(r'^- \[ \]\s+(?!S-\d+:)(.{5,}?)$', content, re.MULTILINE):
+            # 找 plan 中未完成的无前缀任务（排除 S-XX 和 T-XX 格式）
+            for m in re.finditer(r'^- \[ \]\s+(?!(?:S|T)-\d+:)(.{8,}?)$', content, re.MULTILINE):
                 desc = m.group(1).strip()
-                # 取任务描述的前 10 个字符做模糊匹配
-                key = desc[:10].lower()
-                if key and key in mem_content and ('完成' in mem_content or '✅' in mem_content):
+                # 取任务描述的前 15 个字符做模糊匹配，降低误标率
+                key = desc[:15].lower()
+                if len(key) >= 8 and key in mem_content and ('完成' in mem_content or '✅' in mem_content):
                     # 标记这个任务为完成
                     old_line = m.group(0)
                     new_line = old_line.replace('- [ ]', '- [x]', 1)
@@ -198,7 +200,7 @@ def extract_completed_tasks(plan_path):
     """从当前 project-plans 中提取本轮完成的任务"""
     tasks = []
     content = plan_path.read_text()
-    for m in re.finditer(r'^- \[x\]\s+(S-\d+):\s*(.+)$', content, re.MULTILINE):
+    for m in re.finditer(r'^- \[x\]\s+((?:S|T)-\d+):\s*(.+)$', content, re.MULTILINE):
         desc = m.group(2).strip()
         tasks.append({
             'id': m.group(1),
@@ -382,8 +384,8 @@ def parse_all_short_tasks(plan_path):
     tasks = []
     seen = set()
     
-    # 格式1: S-XX: 前缀
-    for m in re.finditer(r'^- \[([ x])\]\s+(S-\d+):\s*(.+)$', content, re.MULTILINE):
+    # 格式1: S-XX: or T-XX: 前缀
+    for m in re.finditer(r'^- \[([ x])\]\s+((?:S|T)-\d+):\s*(.+)$', content, re.MULTILINE):
         tid = m.group(2)
         if tid not in seen:
             seen.add(tid)
@@ -403,7 +405,7 @@ def parse_all_short_tasks(plan_path):
             continue
         
         if in_task_section:
-            m = re.match(r'^- \[([ x])\]\s+(?!S-\d+:)(.+)$', line)
+            m = re.match(r'^- \[([ x])\]\s+(?!(?:S|T)-\d+:)(.+)$', line)
             if m:
                 tid = f"AUTO-{auto_id:02d}"
                 auto_id += 1
@@ -510,7 +512,7 @@ def evolution_cycle(plan_path, dry_run=False):
     evo_sorted = sorted(evomap, key=lambda t: (t['bounty'], t['slots']), reverse=True)
     
     # 找到当前最大的 S-* 编号
-    all_existing = re.findall(r'S-(\d+)', plan_path.read_text())
+    all_existing = re.findall(r'(?:S|T)-(\d+)', plan_path.read_text())
     max_num = max((int(n) for n in all_existing), default=0)
     
     new_tasks = []

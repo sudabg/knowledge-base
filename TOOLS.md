@@ -108,6 +108,9 @@ Add whatever helps you do your job. This is your cheat sheet.
 - **权限**: ✅ 可创建外部 org PR（mesa PR #3535）
 - **Forks**: claude-skills, mesa, CloudFlare-ImgBed, postbot, wxpush
 - **注意**: 大仓库别 git clone，用 `gh api` 直接操作文件
+- **⚠️ Token 失忆修复**: 运行 `bash scripts/fix-github-auth.sh ghp_xxxx` 或 `python3 scripts/github_auth.py fix`
+- **⚠️ HOME 问题**: 沙箱环境需 `export HOME=/home/gem`
+- **⚠️ Config 位置**: `/home/gem/.config/gh/hosts.yml`
 
 ### OpenClaw 更新
 

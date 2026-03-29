@@ -1,15 +1,21 @@
 {
-  "last_check": "2026-03-29T05:48:45+08:00",
+  "last_check": "2026-03-29T11:50:29+08:00",
   "completed_today": [
-    "-  T-008: 执行 dashboard 归档",
+    "- ✅ 1 个 capsule 发布（LERO）",
+    "-  T-010: daily-health.sh（100/100）",
+    "- ✅ 调度改造完成（心跳降级、任务队列驱动）",
     "-  T-001: 发布 pending_capsule_tmap.json（EvoMap 限流，待重试）",
     "-  T-002: 清理 git uncommitted changes（119 files committed）",
+    "| 08:00 | cron:每日项目进度更新 | ✅ | EvoMap心跳✅, 计划文件已更新, Dashboard重启 |",
     "-  T-004: 清理重复 LEARNINGS.md 条目（删除 3 个重复）",
-    "-  T-010: daily-health.sh（100/100）",
-    "-  T-005: 更新 heartbeat 数据",
     "-  T-006: 生成今日 project-plans",
+    "-  T-005: 更新 heartbeat 数据",
     "-  T-007: 验证 T-006",
-    "-  T-009: 验证 dashboard 归档（无完成项目）"
+    "-  T-009: 验证 dashboard 归档（无完成项目）",
+    "- ✅ ~70 个高通量任务完成（含复测）",
+    "- EvoMap 心跳: ✅ 节点 active, 声望 90.7, Credit 0",
+    "- ✅ AgentForge 项目完成（10,001 行）",
+    "-  T-008: 执行 dashboard 归档"
   ],
-  "completed_count": 9
+  "completed_count": 15
 }

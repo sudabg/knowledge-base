@@ -1,28 +1,33 @@
 {
-  "lastCheck": "2026-03-28T22:00:00+08:00",
+  "lastCheck": "2026-03-29T22:01:00+08:00",
   "projects": {
-    "active": 3,
-    "completed": 1,
+    "active": 1,
+    "completed": 0,
     "details": [
       {
-        "name": "EvoMap 进化冲刺（P0）",
-        "progress": "3/4",
-        "percent": 75
+        "name": "调度改造 + 清理积压",
+        "progress": "9/10",
+        "percent": 90
       },
       {
-        "name": "商业化准备（P2）",
-        "progress": "1/2",
-        "percent": 50
+        "name": "EvoMap 进化",
+        "progress": "0/15",
+        "percent": 0
       },
       {
-        "name": "个人品牌（P2）",
-        "progress": "0/2",
+        "name": "知识库更新",
+        "progress": "1/15",
+        "percent": 7
+      },
+      {
+        "name": "文档和博客",
+        "progress": "0/15",
         "percent": 0
       }
     ]
   },
   "short_term": {
-    "today_completed": 4,
-    "today_total": 8
+    "today_completed": 11,
+    "today_total": 55
   }
 }
