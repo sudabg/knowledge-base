@@ -104,13 +104,12 @@ Add whatever helps you do your job. This is your cheat sheet.
 ## GitHub
 
 - **用户名**: sudabg
-- **Auth**: `gh` CLI 已登录（classic PAT，ghp_ 开头）
+- **Auth**: `gh` CLI 已登录（classic PAT，ghp_yXt1...6NNoZ）
+- **Token 存储**: 环境变量 `GITHUB_TOKEN` + `GH_TOKEN` 在 `/home/gem/.bashrc`
+- **Token 来源**: Gist（最后一位 A→Z）
 - **权限**: ✅ 可创建外部 org PR（mesa PR #3535）
 - **Forks**: claude-skills, mesa, CloudFlare-ImgBed, postbot, wxpush
-- **注意**: 大仓库别 git clone，用 `gh api` 直接操作文件
-- **⚠️ Token 失忆修复**: 运行 `bash scripts/fix-github-auth.sh ghp_xxxx` 或 `python3 scripts/github_auth.py fix`
-- **⚠️ HOME 问题**: 沙箱环境需 `export HOME=/home/gem`
-- **⚠️ Config 位置**: `/home/gem/.config/gh/hosts.yml`
+- **⚠️ 不要再忘记**: token 已写入 .bashrc，每次登录自动加载
 
 ### OpenClaw 更新
 
@@ -132,22 +131,24 @@ Add whatever helps you do your job. This is your cheat sheet.
 
 ## 🌐 网络代理（弹药库）
 
+**⚠️ 重要：代理只能在本地/VPS 跑，沙箱网络受限会 TLS 握手失败。**
+
 **何时使用：** 需要下载大文件但直连太慢/超时时启用，用完立即关闭。
 
 **工具**: Xray-core v24.12.31（VLESS-reality 协议）
-- **二进制**: `/tmp/xray/xray`
-- **配置**: `/tmp/xray/config.json`（US 节点，非港澳）
+- **二进制**: `tools/xray/xray`
+- **配置**: `tools/xray/config.json`（US 节点，非港澳）
 - **订阅**: 一条明提供（有效期未知，过期找他要新的）
 
-**启用步骤：**
+**启用步骤（在工作目录下执行）：**
 ```bash
-# 1. 启动代理（后台）
-nohup /tmp/xray/xray run -config /tmp/xray/config.json > /tmp/xray/xray.log 2>&1 &
+cd /home/gem/workspace/agent/workspace
+nohup tools/xray/xray run -config tools/xray/config.json > /tmp/xray.log 2>&1 &
 
-# 2. 验证连通性
+# 验证连通性
 curl -s --max-time 5 --socks5-hostname 127.0.0.1:10808 -I https://google.com
 
-# 3. 通过代理下载
+# 通过代理下载
 curl -L --socks5-hostname 127.0.0.1:10808 -o output.file "https://target-url"
 ```
 
@@ -163,6 +164,7 @@ pkill -9 xray  # 立即停止
 - 仅 US/FR/BR/IT/UK/JP/KR/SG 节点可用，**避免 HK 节点**（一条明指定）
 - 不要长时间运行，下载完立即关闭
 - 订阅过期时告知一条明更新
+- **旧路径 `/tmp/xray/` 已废弃，使用 `tools/xray/`**
 
 ## 自动触发词
 
@@ -330,6 +332,12 @@ payload = {
 - 心跳成功
 - 至少等待 5 分钟后重试
 
+### 节点状态快照 (2026-03-31)
+- **Published**: 336
+- **Reputation**: 90.71
+- **Credit**: 0
+- **状态**: Active（心跳正常）
+
 ## EvoMap Evolver 协议适配（2026-03-24 新增）
 
 ### 协议变更历史
@@ -386,3 +394,25 @@ payload = {
   - 🔗 资源索引: `QmkIwXCWuiHR4zkC60qckYGAnxf`
 - 知识库首页节点: `TRpaw08RIiYIOGkbbRjcn1DEnPg`
 - 新建文档用 `feishu_create_doc` + `wiki_node` 参数
+
+## 📋 每日任务质量追踪表
+
+- **多维表格**: https://tcnyzpcts10k.feishu.cn/base/EhO5bv8DaacE9osvOeac2BVZnid
+- **app_token**: `EhO5bv8DaacE9osvOeac2BVZnid`
+- **table_id**: `tblYeRqS6e2sZ2Qj`
+- **字段**: 任务名称(主键) | 日期 | 任务ID | 任务描述 | 类别(单选) | 质量评分(数字) | 可复用性(单选) | 执行状态(单选) | 是否沉淀Skill(勾选) | 沉淀Skill名称 | 踩坑记录 | 行为改变承诺
+- **类别选项**: EvoMap | 配置反思 | 知识库 | 工具建设 | Skill沉淀 | 心跳维护 | 学习研究 | 其他
+- **执行状态选项**: ✅完成 | ⚠️部分完成 | ❌失败
+- **可复用性选项**: 高 | 中 | 低
+- **录入时机**: 每天结束时，从 memory/YYYY-MM-DD.md 筛选质量≥7的任务批量录入
+
+## 📝 博客写作
+
+- **Skill**: `skills/blog-writer/` — 博客写作SOP
+- **源目录**: `blog/posts/` — Markdown 文章
+- **模板**: `blog/templates/base.html` — HTML模板
+- **生成器**: `python3 blog/generate.py` — 静态页面生成
+- **输出目录**: `blog/site/` — HTTP server 直接服务
+- **域名**: https://lilizi.openbot.indevs.in/
+- **HTTP Server**: `python3 -m http.server 8081` (CWD=blog/site/)
+- **触发**: 每日晚间心跳，质量≥8 + 距上次≥1天

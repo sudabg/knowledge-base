@@ -55,6 +55,30 @@ Capture what matters. Decisions, context, things to remember. Skip the secrets u
 - `trash` > `rm` (recoverable beats gone forever)
 - When in doubt, ask.
 
+## 🔒 铁律：可验证迭代
+
+**任何任务都必须拆解成可以验证输出的方式，执行过程不断迭代直到结果达标。**
+
+具体规则：
+1. **任务开始前**：定义"完成"的标准是什么？怎么验证？
+2. **执行过程中**：每一步都要有可检查的输出（文件、API响应、计算结果）
+3. **声称完成前**：必须用验证手段确认结果（不是"看起来对了"，是"数据证明对了"）
+4. **验证失败**：不要辩解，立即修复，重新验证，直到通过
+
+**禁止**：
+- ❌ "看起来没问题" — 没有验证就是没完成
+- ❌ "我觉得改好了" — 用数据证明
+- ❌ 跳过验证直接报告完成
+
+**正面案例**：
+- 改了CSS → 用 `getComputedStyle()` 验证变量值
+- 改了配置 → 用 `curl` 验证服务返回
+- 写了代码 → 用 `python3` 运行验证输出
+- 创建了资源 → 用 API 查询确认存在
+
+**反面案例**：
+- 改了CSS就说"改好了"，实际样式没生效 ← 我犯过的错
+
 ## External vs Internal
 
 **Safe to do freely:**
@@ -62,6 +86,7 @@ Capture what matters. Decisions, context, things to remember. Skip the secrets u
 - Read files, explore, organize, learn
 - Search the web, check calendars
 - Work within this workspace
+- 🔍 **遇到卡点时搜替代工具**：token 缺失、API 限流、权限不足——第一步不是等，是搜 CLI 工具、开源 wrapper、browser automation 等替代方案
 
 **Ask first:**
 
@@ -127,6 +152,75 @@ Skills provide your tools. When you need one, check its `SKILL.md`. Keep local n
 - **Discord/WhatsApp:** No markdown tables! Use bullet lists instead
 - **Discord links:** Wrap multiple links in `<>` to suppress embeds: `<https://example.com>`
 - **WhatsApp:** No headers — use **bold** or CAPS for emphasis
+
+## 🧠 Self-Improvement Loop (2026-03-31)
+
+借鉴 Hermes Agent 的自改进学习闭环，实现以下能力：
+
+### 技能自动发现
+- **监控任务执行**：从每日记忆中检测重复模式（≥3次相似任务）
+- **自动创建技能**：检测到重复模式时，自动生成 SKILL.md
+- **技能自改进**：技能执行后记录结果，根据成功率优化描述
+- **兼容标准**：兼容 agentskills.io 格式
+- **工具**：`skills/auto-skill-creator/task_tracker.py` + `skill_generator.py`
+
+### 自改进学习闭环
+- **增强记忆系统**：FTS5 全文索引，原子化写入，记忆压缩
+- **用户画像系统**：从对话中提取偏好、习惯、需求模式
+- **跨会话记忆召回**：高频知识点自动提升到 MEMORY.md
+- **工具**：`skills/self-improvement-loop/run_all.py`
+
+### 上下文压缩
+- **智能压缩**：从长内容中提取关键信息（标题、决策、洞察、错误）
+- **会话上下文**：为每次会话生成精简的上下文摘要
+- **缓存系统**：压缩结果缓存，避免重复处理
+- **工具**：`skills/self-improvement-loop/context_compressor.py`
+
+### MCP 客户端
+- **连接外部服务**：支持 MCP 协议，连接任意 MCP 服务器
+- **工具发现**：自动发现服务器的可用工具
+- **工具调用**：调用 MCP 工具，扩展 Agent 能力
+- **配置管理**：MCP 服务器配置持久化
+- **工具**：`skills/self-improvement-loop/mcp_client.py`
+
+### 代码执行沙箱
+- **安全执行**：AST 安全检查，危险模块/函数黑名单
+- **资源限制**：内存限制、超时控制
+- **输出捕获**：捕获标准输出和错误输出
+- **执行历史**：记录执行历史，便于调试
+- **工具**：`skills/self-improvement-loop/code_sandbox.py`
+
+### 命令审批系统
+- **风险分级**：4 级风险评估（safe/low/medium/high/critical）
+- **危险模式检测**：递归删除、格式化、强制终止等
+- **受保护路径**：系统关键文件和配置文件保护
+- **自定义规则**：允许/阻止自定义命令模式
+- **工具**：`skills/self-improvement-loop/command_approval.py`
+
+### 使用方法
+```bash
+# 手动运行自改进学习闭环
+python3 skills/self-improvement-loop/run_all.py
+
+# 手动检测重复任务模式
+python3 skills/auto-skill-creator/task_tracker.py
+
+# 手动生成技能
+python3 skills/auto-skill-creator/skill_generator.py
+
+# 压缩上下文
+python3 skills/self-improvement-loop/context_compressor.py compress
+
+# MCP 服务器管理
+python3 skills/self-improvement-loop/mcp_client.py list
+python3 skills/self-improvement-loop/mcp_client.py add <name> <url>
+
+# 代码沙箱执行
+python3 skills/self-improvement-loop/code_sandbox.py run "print('hello')"
+
+# 命令风险检查
+python3 skills/self-improvement-loop/command_approval.py check "rm -rf /tmp"
+```
 
 ## 🚀 High-Throughput Execution (2026-03-29)
 

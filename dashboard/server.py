@@ -87,7 +87,7 @@ class DashboardHandler(SimpleHTTPRequestHandler):
                 proj['progress'] = round(done / total * 100) if total > 0 else 0
 
             for line in content.split('\n'):
-                if line.startswith('## 项目'):
+                if line.startswith('## ') and not line.startswith('###') and not line.startswith('## 已完成') and not line.startswith('## 周一') and not line.startswith('## 高通量'):
                     if current_project:
                         _finish_project(current_project)
                         projects.append(current_project)
@@ -118,7 +118,7 @@ class DashboardHandler(SimpleHTTPRequestHandler):
         return {'projects': []}
     
     def get_today_tasks(self):
-        """Extract today's actionable tasks from project-plans (short-term S- tasks or marked as 今日)"""
+        """Extract today's actionable tasks from project-plans (T-001, S-001 format or any checklist item)"""
         today = datetime.datetime.now().strftime('%Y-%m-%d')
         plans_file = WORKSPACE / 'docs' / f'project-plans-{today}.md'
         if not plans_file.exists():
@@ -127,51 +127,67 @@ class DashboardHandler(SimpleHTTPRequestHandler):
                 plans_file = Path(plan_files[0])
         
         tasks = []
+        seen_ids = set()
         if plans_file.exists():
             content = plans_file.read_text()
+            # Find the "已完成" sections to exclude carried-over tasks from pending count
+            in_completed_section = False
             for line in content.split('\n'):
                 t = line.strip()
-                # Match task items: - [ ] or - [x] followed by task description
+                # Detect completed sections
+                if re.match(r'^#{1,3}\s*已完[成结]', t):
+                    in_completed_section = True
+                    continue
+                # New top-level section resets completed flag
+                if re.match(r'^#{1,2}\s+', t) and not re.match(r'^#{3,}\s+', t):
+                    in_completed_section = False
+
+                # Match task items: - [ ] or - [x]
                 if t.startswith('- [') and ']' in t:
-                    # Extract done status and text
                     done = t.startswith('- [x]')
                     text = t.split(']', 1)[1].strip()
-                    # Find S- ID in text
-                    import re
-                    id_match = re.search(r'S-\d+', text)
+                    # Strip leading priority markers like **P0:**, **P1:**
+                    text = re.sub(r'^\*\*[pP]\d:\*\*\s*', '', text)
+                    # Find task ID (T-001, S-001, T-001_30, etc.)
+                    id_match = re.search(r'[TS]-\d+(?:_\d+)?', text)
                     if id_match:
                         task_id = id_match.group(0)
+                        # Clean duplicate ID prefix from text (e.g., "T-001: T-001: ..." -> "T-001: ...")
+                        cleaned = re.sub(r'^' + re.escape(task_id) + r':\s*', '', text)
+                        if cleaned != text and cleaned.startswith(task_id):
+                            # Still starts with ID, strip again
+                            cleaned = re.sub(r'^' + re.escape(task_id) + r':\s*', '', cleaned)
+                        display_text = cleaned if cleaned else text
                     else:
-                        # Not a short-term task
-                        continue
+                        task_id = f'AUTO-{abs(hash(text)) % 10000:04d}'
+                        display_text = text
                     
-                    # Avoid duplicates: use task_id as unique key (multiple appearances are the same task)
+                    if task_id in seen_ids:
+                        continue
+                    seen_ids.add(task_id)
+
+                    # Determine priority from context (look for P0/P1/P2 before this line)
+                    priority = 'normal'
+                    
                     tasks.append({
                         'id': task_id,
-                        'text': text,
+                        'text': display_text,
                         'done': done,
-                        'type': 'short-term'
+                        'carried': in_completed_section,
+                        'type': 'short-term' if task_id.startswith('S-') else 'task'
                     })
-        # Deduplicate by task_id (last occurrence wins for done status)
-        task_map = {}
-        for t in tasks:
-            tid = t['id']
-            # Prefer done=True if any occurrence is done
-            if tid in task_map:
-                if t['done']:
-                    task_map[tid]['done'] = True
-            else:
-                task_map[tid] = t
-        unique = list(task_map.values())
-        unique.sort(key=lambda x: x['id'])
-        total = len(unique)
-        done = sum(1 for t in unique if t['done'])
+
+        # Only show active (non-carried) tasks in the main view
+        active_tasks = [t for t in tasks if not t.get('carried')]
+        active_tasks.sort(key=lambda x: x['id'])
+        total = len(active_tasks)
+        done_count = sum(1 for t in active_tasks if t['done'])
         return {
             'date': today,
-            'tasks': unique,
+            'tasks': active_tasks,
             'total': total,
-            'done': done,
-            'pending': total - done
+            'done': done_count,
+            'pending': total - done_count
         }
     
     def get_memory(self):
@@ -350,17 +366,32 @@ class DashboardHandler(SimpleHTTPRequestHandler):
             if not t:
                 continue
 
-            # Match time headers: ## HH:MM title or ### HH:MM title
+            # Match time headers: ## HH:MM title, ### HH:MM title, or ## Title (HH:MM)
             time_match = re.match(r'^#{2,3}\s+(\d{1,2}:\d{2})\s+(.+)$', t)
+            paren_match = re.match(r'^#{2,3}\s+(.+)\s*\((\d{1,2}:\d{2})\)\s*$', t)
             if time_match:
                 if current_group and current_items:
                     groups.append({**current_group, 'items': current_items})
                 raw_time = time_match.group(1)
                 parts = raw_time.split(':')
                 h = int(parts[0])
-                # Keep as 24-hour format, just pad
                 time_str = f"{h:02d}:{parts[1]}"
                 title = time_match.group(2).strip()
+                if 'Pre-Compaction' in title or 'pre-compaction' in title:
+                    current_group = None
+                    current_items = []
+                    continue
+                current_group = {'time': time_str, 'title': title, 'hour': h}
+                current_items = []
+                continue
+            elif paren_match:
+                if current_group and current_items:
+                    groups.append({**current_group, 'items': current_items})
+                title = paren_match.group(1).strip()
+                raw_time = paren_match.group(2)
+                parts = raw_time.split(':')
+                h = int(parts[0])
+                time_str = f"{h:02d}:{parts[1]}"
                 if 'Pre-Compaction' in title or 'pre-compaction' in title:
                     current_group = None
                     current_items = []
@@ -377,7 +408,6 @@ class DashboardHandler(SimpleHTTPRequestHandler):
                 raw_time = section_match.group(1)
                 parts = raw_time.split(':')
                 h = int(parts[0])
-                # Keep as 24-hour format, just pad
                 time_str = f"{h:02d}:{parts[1]}"
                 current_group = {'time': time_str, 'title': '', 'hour': h}
                 current_items = []

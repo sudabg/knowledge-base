@@ -86,6 +86,40 @@ def check_sync_script():
     return {"ok": age_min < 60 and not has_error, "last_run_min": round(age_min),
             "has_error": has_error}
 
+def check_tasks_api():
+    """检查 Tasks API 是否返回数据"""
+    try:
+        req = urllib.request.urlopen(f"http://localhost:{PORT}/api/today", timeout=5)
+        data = json.loads(req.read())
+        total = data.get("total", 0)
+        if total == 0:
+            return {"ok": False, "error": "Tasks API 返回 0 条任务（可能 ID 格式不匹配）"}
+        return {"ok": True, "total": total, "done": data.get("done", 0)}
+    except Exception as e:
+        return {"ok": False, "error": f"Tasks API 检查失败: {e}"}
+
+def check_activities_api():
+    """检查 Activities API 是否返回数据"""
+    try:
+        req = urllib.request.urlopen(f"http://localhost:{PORT}/api/activities", timeout=5)
+        data = json.loads(req.read())
+        groups = data.get("groups", [])
+        if len(groups) == 0:
+            return {"ok": False, "error": "Activities API 返回 0 个分组（可能日志格式不匹配）"}
+        return {"ok": True, "groups": len(groups), "total_items": data.get("total", 0)}
+    except Exception as e:
+        return {"ok": False, "error": f"Activities API 检查失败: {e}"}
+
+def check_projects_api():
+    """检查 Projects API 是否返回数据"""
+    try:
+        req = urllib.request.urlopen(f"http://localhost:{PORT}/api/projects", timeout=5)
+        data = json.loads(req.read())
+        count = len(data) if isinstance(data, list) else 0
+        return {"ok": True, "projects": count}
+    except Exception as e:
+        return {"ok": False, "error": f"Projects API 检查失败: {e}"}
+
 def check_evo_heartbeat():
     """检查 EvoMap 心跳是否超时"""
     hb_file = WORKSPACE / "dashboard" / "last_heartbeat.json"
@@ -114,11 +148,11 @@ def fix_http():
     log("尝试重启 Dashboard 服务...", "FIX")
     try:
         # 先杀掉旧进程
-        subprocess.run(["pkill", "-f", "dashboard/app.py"], capture_output=True)
+        subprocess.run(["pkill", "-f", "dashboard/server.py"], capture_output=True)
         time.sleep(1)
         # 后台启动
         subprocess.Popen(
-            ["python3", str(WORKSPACE / "dashboard" / "app.py")],
+            ["python3", str(WORKSPACE / "dashboard" / "server.py")],
             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
             cwd=str(WORKSPACE / "dashboard")
         )
@@ -138,6 +172,8 @@ def run_all_checks(fix=False):
     """执行所有检查"""
     checks = {
         "http_service": check_http(),
+        "tasks_api": check_tasks_api(),
+        "activities_api": check_activities_api(),
         "plan_file": check_plan_file(),
         "memory_log": check_memory_log(),
         "sync_script": check_sync_script(),
@@ -194,6 +230,11 @@ def main():
                 extra = f" (剩余: {result['free_gb']}GB)"
             elif "last_heartbeat_min" in result:
                 extra = f" (心跳: {result['last_heartbeat_min']}min ago)"
+            elif "total" in result:
+                done = result.get("done", 0)
+                extra = f" ({result['total']} tasks, {done} done)"
+            elif "groups" in result:
+                extra = f" ({result['groups']} groups, {result.get('total_items', 0)} items)"
             print(f"  {icon} {name}: {detail}{extra}")
         print(f"{'='*50}\n")
 

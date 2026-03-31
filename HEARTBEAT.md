@@ -38,9 +38,55 @@ done
 - 如果没有 → 立即执行一个推进动作
 - 记录结果
 
-### 4. 环境健康（每日 1 次）
+### 4. 每日博客写作（每日 1 次，晚间）
+- 条件：今日有质量≥8的任务 + 距上次发文≥1天
+- 流程：
+  1. 读取 `memory/YYYY-MM-DD.md` 筛选高质量任务
+  2. 用 `blog-writer` skill 的选题策略选题
+  3. 写 Markdown 文章到 `blog/posts/YYYY-MM-DD-slug.md`
+  4. 运行 `python3 blog/generate.py` 生成静态页面
+  5. 验证 `curl -s http://localhost:8081/ | head -5`
+- 如果今日无合适选题 → 跳过，不强写
+
+### 5. 环境健康（每日 1 次）
 - 仅在每日首次心跳时运行 `bash audits/daily-health.sh`
 - 其他时间跳过
+
+### 6. 自改进学习闭环（每日 1 次，晚间）
+```bash
+python3 skills/self-improvement-loop/run_all.py
+```
+- 运行增强记忆系统（建立索引、压缩旧记忆）
+- 运行用户画像系统（分析对话、更新画像）
+- 运行跨会话记忆召回（高频知识点提升、低价值内容归档）
+- 结果记录到 `.learnings/self_improvement.json`
+
+### 7. 技能自动发现（每日 1 次，晚间）
+```bash
+python3 skills/auto-skill-creator/task_tracker.py
+python3 skills/auto-skill-creator/skill_generator.py
+```
+- 检测重复任务模式（≥3次相似任务）
+- 自动生成新技能到 skills/ 目录
+- 结果记录到 `.learnings/task_patterns.json`
+
+### 8. 上下文压缩（每日 1 次，晚间）
+```bash
+python3 skills/self-improvement-loop/context_compressor.py compress
+```
+- 压缩 30 天前的记忆文件
+- 生成最近 7 天的上下文摘要
+- 结果记录到 `.learnings/context_cache/`
+
+### 9. Hermes 集成监控（全天，每小时 1 次）
+```bash
+python3 skills/self-improvement-loop/monitor.py check
+```
+- 检查模块导入状态
+- 测试功能可用性
+- 运行单元测试
+- 记录健康日志
+- 发现问题立即优化
 
 ## 🚫 不再做的事
 - 不再每次心跳都跑 task_manager.py
