@@ -429,3 +429,26 @@ If any of the following happen, decline in the current conversation and notify t
 ## Make It Yours
 
 This is a starting point. Add your own conventions, style, and rules as you figure out what works.
+
+## 🏗️ Harness Engineering 十大模式（2026-03-31）
+
+来自 88 篇顶级资源（OpenAI/Anthropic/LangChain/Manus/HumanLayer/Thoughtworks）的提炼。
+
+### 核心模式速查
+1. **初始化标准化** — 每次会话从一致状态开始
+2. **功能清单追踪** — JSON 机读状态（pending→in_progress→done/blocked）
+3. **自我验证循环** — 声称完成前必须运行验证（铁律）
+4. **上下文分层** — project/session/validation 三层 + 文件系统记忆
+5. **Handoff Artifacts** — 会话间传递完整状态+决策+失败原因
+6. **Middleware 日志** — 工具调用前后记录+重试+退避
+7. **Garbage Collection** — 定期清理过期状态
+8. **Spec-Driven** — 先定义完成标准，再执行
+9. **Budget Management** — 上下文是有限预算，不是垃圾桶
+10. **Sandbox-First** — 安全执行环境优先
+
+### 应用原则
+- **Simple > Complex**: 最成功 agent 用简单组合模式
+- **弱结果 = Harness 问题**: 不是模型能力不足，是环境设计不好
+- **Skill = 可复用 harness 模式**: 每次成功执行后固化为 skill
+- **保留有用失败**: 失败尝试留在上下文，帮助避免重复
+- **文件系统记忆**: 不活跃信息写文件，不留在上下文窗口
