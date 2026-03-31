@@ -32,11 +32,15 @@
 - **03-29**: 高通量改造后 03-29 完成 18 个任务（含 Phase 1-5 部分）
 + **03-31**: Dashboard 两类数据源格式不匹配导致 API 返回空——必须端到端验证，不只验证代码改动
 + **03-31**: 单元测试覆盖率达标（>60%）靠系统化覆盖：安全规则、编码、内存、超时、输出捕获
++ **03-31**: 自评天然偏宽松→需独立评估者（Mode 11），Anthropic Generator-Evaluator 方法论验证
++ **03-31**: D2Skill 双粒度技能库→Harness Skill Bank (Mode 14)，从经验自动提取可复用技能
++ **03-31**: GAAMA 概念中介层次知识图谱→skill-bank 升级路线：fact+reflection+concept 三层图
 
 ## System Directives
 - Nothing to say → NO_REPLY | Heartbeat → HEARTBEAT_OK
 - Memory recall → memory_search first
 - `trash` > `rm` | Don't exfiltrate private data
+- Harness Skill Bank: 复杂任务前 `python3 .harness/skill-bank/maintenance.py query` 检索相关技能
 
 ## Daily Log
-- Today: `memory/2026-03-30.md`
+- Today: `memory/2026-03-31.md`
