@@ -4,7 +4,7 @@
   "harnessDir": ".harness",
   "createdAt": "2026-03-31T09:04:52.921028",
   "sessions": 4,
-  "lastSession": "2026-03-31T15:38:56.098217",
+  "lastSession": "2026-03-31T17:12:30.000000",
   "paceLayers": {
     "protocol": {
       "description": "核心原则、铁律、模式定义 — 极慢变更",
@@ -30,6 +30,28 @@
       "changePolicy": "append_only",
       "gcStrategy": "daily_compress"
     }
+  },
+  "modes": [
+    "初始化标准化",
+    "功能清单追踪",
+    "自我验证循环",
+    "上下文分层管理",
+    "Handoff Artifacts",
+    "Middleware 日志",
+    "Garbage Collection",
+    "Spec-Driven",
+    "Budget Management",
+    "Sandbox-First",
+    "独立评估者",
+    "Sprint 合同",
+    "组件必要性检验"
+  ],
+  "scoring_dimensions": {
+    "correctness": {"weight": 0.3, "threshold": "must_pass", "description": "功能正确性"},
+    "completeness": {"weight": 0.25, "threshold": "must_pass", "description": "完整性：是否覆盖所有需求"},
+    "consistency": {"weight": 0.2, "threshold": "should_pass", "description": "一致性：无矛盾或冲突"},
+    "elegance": {"weight": 0.15, "threshold": "nice_to_have", "description": "整洁度：代码/结构优雅"},
+    "performance": {"weight": 0.1, "threshold": "nice_to_have", "description": "性能：时间/空间效率"}
   },
   "immutableCode": {
     "enabled": true,
