@@ -1,5 +1,135 @@
 {
-  "projectName": "",
+  "projectName": "harness-engineering",
   "createdAt": "2026-03-31T09:04:52.920465",
-  "features": []
+  "features": [
+    {
+      "id": "F-001",
+      "description": "SKILL.md 十大模式框架文档",
+      "status": "done",
+      "steps": [
+        "读取 88 篇资源",
+        "提炼模式",
+        "编写 SKILL.md",
+        "添加参考文献"
+      ],
+      "blocked_reason": null,
+      "validation": {
+        "method": "file_check",
+        "command": "wc -l skills/harness-engineering/SKILL.md",
+        "last_result": "pass",
+        "last_run": "2026-03-31T15:30:00+08:00"
+      },
+      "decisions": [
+        "选 10 模式而非 7+3 因为模式 8/9/10 是独立核心概念"
+      ],
+      "completed_at": "2026-03-31T13:56:00+08:00"
+    },
+    {
+      "id": "F-002",
+      "description": "Python 工具脚本 (init/resume/complete)",
+      "status": "done",
+      "steps": [
+        "设计 CLI 接口",
+        "实现 init.py",
+        "实现 resume.py",
+        "实现 complete.py"
+      ],
+      "blocked_reason": null,
+      "validation": {
+        "method": "exec",
+        "command": "python3 skills/harness-engineering/init.py /tmp/test-harness && ls /tmp/test-harness/.harness/",
+        "last_result": "pass",
+        "last_run": "2026-03-31T15:30:00+08:00"
+      },
+      "decisions": [
+        "用 Python 而非 shell 脚本，因为需要 JSON 操作"
+      ],
+      "completed_at": "2026-03-31T13:56:00+08:00"
+    },
+    {
+      "id": "F-003",
+      "description": "AGENTS.md 十大模式速查段落",
+      "status": "done",
+      "steps": [
+        "编写模式速查",
+        "添加应用原则"
+      ],
+      "blocked_reason": null,
+      "validation": {
+        "method": "grep",
+        "command": "grep -c 'Harness Engineering' AGENTS.md",
+        "last_result": "pass",
+        "last_run": "2026-03-31T15:30:00+08:00"
+      },
+      "decisions": [
+        "放在 AGENTS.md 底部作为工作流参考"
+      ],
+      "completed_at": "2026-03-31T13:57:00+08:00"
+    },
+    {
+      "id": "F-004",
+      "description": "SOUL.md Harness 实践段落",
+      "status": "done",
+      "steps": [
+        "编写实践指导",
+        "链接到铁律"
+      ],
+      "blocked_reason": null,
+      "validation": {
+        "method": "grep",
+        "command": "grep -c 'Harness Engineering 实践' SOUL.md",
+        "last_result": "pass",
+        "last_run": "2026-03-31T15:30:00+08:00"
+      },
+      "decisions": [
+        "与铁律并列，作为行为锚点"
+      ],
+      "completed_at": "2026-03-31T13:57:00+08:00"
+    },
+    {
+      "id": "F-005",
+      "description": "飞书知识库文档沉淀",
+      "status": "done",
+      "steps": [
+        "创建飞书文档",
+        "写入完整学习笔记"
+      ],
+      "blocked_reason": null,
+      "validation": {
+        "method": "feishu_fetch",
+        "command": "feishu_fetch_doc BbBewPgN7iu4J9kOJWZcVX8wnpc",
+        "last_result": "pass",
+        "last_run": "2026-03-31T15:30:00+08:00"
+      },
+      "decisions": [
+        "用飞书文档而非本地 markdown，便于团队访问"
+      ],
+      "completed_at": "2026-03-31T13:30:00+08:00"
+    },
+    {
+      "id": "F-006",
+      "description": "审计修复：统一命名、补全遗漏、填充追踪文件",
+      "status": "done",
+      "steps": [
+        "修复 SKILL.md 标题",
+        "填充 harness-study.json",
+        "填充 features.json",
+        "创建 lessons.json",
+        "补全 SOUL.md 10 模式",
+        "统一跨文件命名",
+        "验证全部修改"
+      ],
+      "blocked_reason": null,
+      "validation": {
+        "method": "exec",
+        "command": "bash .harness/validate-all.sh",
+        "last_result": "pass",
+        "last_run": "2026-03-31T15:38:17.536802"
+      },
+      "decisions": [
+        "审计发现后立即修复，不等下个 session"
+      ],
+      "completed_at": "2026-03-31T15:38:17.536895"
+    }
+  ]
 }

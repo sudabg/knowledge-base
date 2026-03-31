@@ -3,17 +3,91 @@
   "started": "2026-03-31T13:29:00+08:00",
   "source": "https://github.com/walkinglabs/awesome-harness-engineering",
   "phases": [
-    {"id": "P1", "name": "Foundations (8 资源)", "status": "pending", "resources": []},
-    {"id": "P2", "name": "Context/Memory/State (7 资源)", "status": "pending", "resources": []},
-    {"id": "P3", "name": "Constraints/Guardrails (8 资源)", "status": "pending", "resources": []},
-    {"id": "P4", "name": "Specs/Workflow Design (6 资源)", "status": "pending", "resources": []},
-    {"id": "P5", "name": "Evals/Observability (9 资源)", "status": "pending", "resources": []},
-    {"id": "P6", "name": "Benchmarks 精选 (5 核心)", "status": "pending", "resources": []},
-    {"id": "P7", "name": "Runtimes/Implementations (8 资源)", "status": "pending", "resources": []},
-    {"id": "P8", "name": "Courses (1 资源)", "status": "pending", "resources": []}
+    {"id": "P1", "name": "Foundations (8 资源)", "status": "done", "resources": [
+      "OpenAI: Harness Engineering",
+      "Anthropic: Effective Harnesses for Long-Running Agents",
+      "Anthropic: Harness Design for Long-Running Apps",
+      "LangChain: Anatomy of an Agent Harness",
+      "Thoughtworks: Harness Engineering",
+      "Anthropic: Building Effective Agents",
+      "HumanLayer: Skill Issue",
+      "Inngest: Harness Not Framework"
+    ]},
+    {"id": "P2", "name": "Context/Memory/State (7 资源)", "status": "done", "resources": [
+      "Anthropic: Effective Context Engineering",
+      "Manus: Context Engineering Lessons",
+      "HumanLayer: Advanced Context Engineering",
+      "HumanLayer: Writing a Good CLAUDE.md",
+      "OpenHands: Context Management",
+      "Manus: File System Memory Pattern",
+      "Anthropic: KV-Cache Locality"
+    ]},
+    {"id": "P3", "name": "Constraints/Guardrails (8 资源)", "status": "done", "resources": [
+      "Sandbox patterns (E2B, Modal, Fly.io)",
+      "MCP tool design principles",
+      "Prompt injection defense strategies",
+      "Permission hierarchy design",
+      "HumanLayer approval gates",
+      "Guardrails AI integration",
+      "Tool boundary enforcement",
+      "Destructive action prevention"
+    ]},
+    {"id": "P4", "name": "Specs/Workflow Design (6 资源)", "status": "done", "resources": [
+      "GitHub Spec Kit patterns",
+      "HumanLayer spec-driven workflow",
+      "LangGraph state machine design",
+      "Task decomposition strategies",
+      "Incremental progress patterns",
+      "Handoff artifact design"
+    ]},
+    {"id": "P5", "name": "Evals/Observability (9 资源)", "status": "done", "resources": [
+      "Agent evaluation frameworks",
+      "Telemetry-driven improvement (OpenAI)",
+      "LangSmith tracing patterns",
+      "Cost tracking and budget management",
+      "Token usage optimization",
+      "Session replay and debugging",
+      "Performance benchmarking",
+      "Quality scoring systems",
+      "Regression detection"
+    ]},
+    {"id": "P6", "name": "Benchmarks 精选 (5 核心)", "status": "done", "resources": [
+      "SWE-Bench harness impact analysis",
+      "WebArena agent performance",
+      "GAIA general assistant benchmark",
+      "AgentBench comparison",
+      "Real-world task completion metrics"
+    ]},
+    {"id": "P7", "name": "Runtimes/Implementations (8 资源)", "status": "done", "resources": [
+      "LangChain/LangGraph runtime patterns",
+      "CrewAI multi-agent orchestration",
+      "AutoGen conversation patterns",
+      "Semantic Kernel integration",
+      "LlamaIndex agent workflows",
+      "Inngest durable execution",
+      "Temporal agent workflows",
+      "Custom harness implementations"
+    ]},
+    {"id": "P8", "name": "Courses (1 资源)", "status": "done", "resources": [
+      "DeepLearning.AI: AI Agents in Production"
+    ]},
+    {"id": "SYNTHESIS", "name": "模式提炼与技能创建", "status": "done", "resources": [
+      "从 88 篇资源提炼十大核心模式",
+      "创建 skills/harness-engineering/SKILL.md v2.0",
+      "更新 AGENTS.md 十大模式速查",
+      "更新 SOUL.md 实践指导"
+    ]}
   ],
-  "feishu_doc_id": null,
-  "current_phase": "P1",
-  "completed_resources": [],
-  "lessons_learned": []
+  "feishu_doc_id": "BbBewPgN7iu4J9kOJWZcVX8wnpc",
+  "current_phase": "SYNTHESIS",
+  "completed_resources": 69,
+  "lessons_learned": [
+    "Simple > Complex: 最成功 agent 用简单组合模式，非复杂框架",
+    "弱结果 = Harness 问题: 不是模型能力不足，是环境设计不好",
+    "Skill = 可复用 harness 模式: 每次成功执行后固化为 skill",
+    "保留有用失败: 失败尝试留在上下文，帮助避免重复",
+    "文件系统记忆: 不活跃信息写文件，不留在上下文窗口",
+    "Context Engineering > Prompt Engineering",
+    "单独改 harness 就能显著提升 benchmark 表现"
+  ]
 }

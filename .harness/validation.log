@@ -1,0 +1,60 @@
+# Harness Engineering v2.0 — Validation Log
+# 验证是铁律：声称完成前必须运行验证
+
+## 2026-03-31 15:30 — 全量审计修复验证
+
+### V-001: SKILL.md 标题一致性
+- 命令: grep -c '七大' skills/harness-engineering/SKILL.md
+- 预期: 0
+- 结果: 0 ✅ PASS
+
+### V-002: .harness/ 文件齐全
+- 命令: for f in config.json features.json harness-study.json progress.txt lessons.json validation.log; do [ -f ".harness/$f" ] && echo "✅" || echo "❌"; done
+- 预期: 6 个文件全部存在
+- 结果: ✅✅✅✅✅✅ PASS
+
+### V-003: features.json 非空
+- 命令: python3 -c "import json; d=json.load(open('.harness/features.json')); print(len(d['features']))"
+- 预期: ≥5
+- 结果: 6 PASS
+
+### V-004: harness-study.json 阶段全部 done
+- 命令: python3 验证脚本
+- 预期: 全部阶段 status=done
+- 结果: 9 阶段全部 done, 69 resources ✅ PASS
+
+### V-005: SOUL.md 覆盖 10 模式
+- 命令: python3 验证脚本（逐模式 grep）
+- 预期: 10/10
+- 结果: 10/10 ✅ PASS
+
+### V-006: 跨文件命名一致
+- 命令: python3 对比三个文件的模式名称列表
+- 预期: 完全一致
+- 结果: 3/3 文件全部 10 模式 ✅ PASS
+
+### V-007: init.py 脚本功能验证
+- 命令: mkdir /tmp/harness-test && python3 skills/harness-engineering/init.py /tmp/harness-test
+- 预期: config.json, features.json, progress.txt, sessions/ 全部生成
+- 结果: 4/4 文件全部生成 ✅ PASS
+
+### V-008: resume.py 脚本功能验证
+- 命令: python3 skills/harness-engineering/resume.py /tmp/harness-test
+- 预期: 正常输出状态信息，无报错
+- 结果: 正常输出项目名/会话数/进度 ✅ PASS
+
+### V-009: complete.py 脚本功能验证
+- 命令: python3 skills/harness-engineering/complete.py "测试任务" /tmp/harness-test
+- 预期: progress.txt 中追加了记录
+- 结果: 进度追加成功 ✅ PASS
+
+### V-010: 飞书文档存在性验证
+- 命令: feishu_fetch_doc BbBewPgN7iu4J9kOJWZcVX8wnpc
+- 预期: 返回文档标题和内容
+- 结果: 标题"🦞 Harness Engineering 深度学习笔记", 总长 11049 字符 ✅ PASS
+
+## 验证总结
+- 总计: 10 项验证
+- PASS: 10
+- FAIL: 0
+- 结论: Harness Engineering v2.0 全量验证通过

@@ -1,0 +1,54 @@
+{
+  "decisions": [
+    {
+      "id": "L-001",
+      "date": "2026-03-31",
+      "context": "从 88 篇资源中提炼模式框架",
+      "decision": "采用 10 模式而非 7+3 原则的命名",
+      "reason": "模式 8(Spec-Driven)、9(Budget Management)、10(Sandbox-First) 是独立核心概念，与前 7 个模式地位等同，不应降级为'原则'",
+      "outcome": "SKILL.md 统一使用'十大核心模式'"
+    },
+    {
+      "id": "L-002",
+      "date": "2026-03-31",
+      "context": "决定 skill 的架构",
+      "decision": "SKILL.md 放完整模式描述，AGENTS.md 放速查，SOUL.md 放行为锚点",
+      "reason": "三层引用：SKILL.md 是知识库，AGENTS.md 是操作手册，SOUL.md 是灵魂指令",
+      "outcome": "三层各有侧重但必须名称统一"
+    },
+    {
+      "id": "L-003",
+      "date": "2026-03-31",
+      "context": "选择参考文献来源",
+      "decision": "优先 Anthropic/OpenAI/Manus/HumanLayer 的一手文章，而非二手博客",
+      "reason": "一手文章有实际数据和案例，二手博客常丢失关键细节",
+      "outcome": "13 篇参考文献全部来自一手来源"
+    }
+  ],
+  "failures": [
+    {
+      "id": "F-001",
+      "date": "2026-03-31",
+      "description": "学习过程没有使用 harness 自己的工作流追踪",
+      "root_cause": "做 harness 研究时忘了用自己的 harness——典型的鞋匠的孩子没鞋穿",
+      "fix": "事后填充 harness-study.json 和 features.json",
+      "prevention": "以后创建 skill 时，同时初始化对应的 .harness/ 并强制使用"
+    },
+    {
+      "id": "F-002",
+      "date": "2026-03-31",
+      "description": "SKILL.md 标题写'七大核心模式+三原则'但实际列出 10 个模式",
+      "root_cause": "先写了标题，后来扩展为 10 个模式但忘了改标题",
+      "fix": "统一为'十大核心模式'",
+      "prevention": "修改内容后必须回查标题和引用"
+    },
+    {
+      "id": "F-003",
+      "date": "2026-03-31",
+      "description": "SOUL.md 只覆盖 10 个模式中的 5 个",
+      "root_cause": "担心 SOUL.md 太长，但忽略了覆盖完整性",
+      "fix": "补全全部 10 个模式的实践指导",
+      "prevention": "SOUL.md 是行为锚点，宁可长也不能漏"
+    }
+  ]
+}

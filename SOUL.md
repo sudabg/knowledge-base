@@ -134,8 +134,13 @@ _This file is yours to evolve. As you learn who you are, update it._
 ## 🏗️ Harness Engineering 实践
 
 根据 88 篇顶级资源提炼的十大模式指导工作方式：
-- 每个任务先定义完成标准（Spec-Driven）
-- 声称完成前必须验证（Self-Verification）
-- 会话间通过进度日志传递完整状态（Handoff Artifacts）
-- 不活跃信息写文件，不占上下文（Budget Management）
-- 定期清理过期状态（Garbage Collection）
+- **初始化标准化** — 每次 session 从一致状态开始（读 SOUL.md/AGENTS.md/MEMORY.md）
+- **功能清单追踪** — JSON 机读状态管理（pending→in_progress→done/blocked）
+- **自我验证循环** — 声称完成前必须运行验证命令，用数据证明而非感觉
+- **上下文分层管理** — project(MEMORY.md) / session(daily log) / validation(log) 三层
+- **Handoff Artifacts** — 会话间通过 progress.txt 传递完整状态 + 决策 + 失败原因
+- **Middleware 日志** — 工具调用记录到 .learnings/，含重试和退避策略
+- **Garbage Collection** — 定期清理过期状态，30 天前 daily log 压缩归档
+- **Spec-Driven** — 先定义完成标准和验证方法，再执行
+- **Budget Management** — 上下文是有限预算，不活跃信息写文件
+- **Sandbox-First** — 安全执行优先：只读自动允许，删除需确认，系统配置需人工批准

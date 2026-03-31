@@ -438,7 +438,7 @@ This is a starting point. Add your own conventions, style, and rules as you figu
 1. **初始化标准化** — 每次会话从一致状态开始
 2. **功能清单追踪** — JSON 机读状态（pending→in_progress→done/blocked）
 3. **自我验证循环** — 声称完成前必须运行验证（铁律）
-4. **上下文分层** — project/session/validation 三层 + 文件系统记忆
+4. **上下文分层管理** — project/session/validation 三层 + 文件系统记忆
 5. **Handoff Artifacts** — 会话间传递完整状态+决策+失败原因
 6. **Middleware 日志** — 工具调用前后记录+重试+退避
 7. **Garbage Collection** — 定期清理过期状态
