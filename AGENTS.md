@@ -432,7 +432,7 @@ This is a starting point. Add your own conventions, style, and rules as you figu
 
 ## 🏗️ Harness Engineering 十大模式（2026-03-31）
 
-来自 88 篇顶级资源（OpenAI/Anthropic/LangChain/Manus/HumanLayer/Thoughtworks）的提炼。
+来自 88 篇顶级资源（OpenAI/Anthropic/LangChain/Manus/HumanLayer/Thoughtworks）的提炼。参考：Phoenix Architecture 步层架构。
 
 ### 核心模式速查
 1. **初始化标准化** — 每次会话从一致状态开始

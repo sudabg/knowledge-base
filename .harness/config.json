@@ -1,8 +1,40 @@
 {
-  "version": "1.0.0",
+  "version": "2.0.0",
   "projectRoot": "/home/gem/workspace/agent/workspace",
   "harnessDir": ".harness",
   "createdAt": "2026-03-31T09:04:52.921028",
   "sessions": 4,
-  "lastSession": "2026-03-31T15:38:56.098217"
+  "lastSession": "2026-03-31T15:38:56.098217",
+  "paceLayers": {
+    "protocol": {
+      "description": "核心原则、铁律、模式定义 — 极慢变更",
+      "files": ["SOUL.md"],
+      "changePolicy": "audit_required",
+      "gcStrategy": "never"
+    },
+    "knowledge": {
+      "description": "操作手册、记忆、技能文档 — 慢变更",
+      "files": ["AGENTS.md", "MEMORY.md", "skills/*/SKILL.md"],
+      "changePolicy": "gc_compression",
+      "gcStrategy": "monthly"
+    },
+    "skills": {
+      "description": "可执行技能和工具 — 快变更",
+      "files": ["skills/*/", "scripts/"],
+      "changePolicy": "version_replace",
+      "gcStrategy": "quarterly"
+    },
+    "state": {
+      "description": "运行时状态、日志 — 极快变更",
+      "files": [".harness/progress.txt", "memory/2026-*.md", ".learnings/"],
+      "changePolicy": "append_only",
+      "gcStrategy": "daily_compress"
+    }
+  },
+  "immutableCode": {
+    "enabled": true,
+    "maxUnitLines": 200,
+    "replacementPolicy": "spec_driven",
+    "noModifyOnlyReplace": ["SOUL.md"]
+  }
 }

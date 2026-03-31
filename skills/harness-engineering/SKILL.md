@@ -332,3 +332,30 @@ Harness Engineering 让 AI Agent 在长时间运行任务中保持一致性和�
 11. [HumanLayer "Advanced Context Engineering"](https://www.humanlayer.dev/blog/advanced-context-engineering)
 12. [HumanLayer "Writing a Good CLAUDE.md"](https://www.humanlayer.dev/blog/writing-a-good-claude-md)
 13. [awesome-harness-engineering (88 resources)](https://github.com/walkinglabs/awesome-harness-engineering)
+14. [Phoenix Architecture / Regenerative Software](https://phoenixarch.dev/) — 代码即负债，系统即资产，评估即代码，步层架构管理变化
+
+## 补充概念（来自凤凰架构）
+
+以下概念可作为十大模式的增强：
+
+### Pace Layers（步层架构）
+根据变化速度将系统分层，对不同层级应用不同变更策略：
+
+| 层 | 变更频率 | 文件 | 策略 |
+|---|---|---|---|
+| 协议层 | 极慢 | SOUL.md 核心原则、铁律 | 需审计才能改 |
+| 知识层 | 慢 | AGENTS.md、MEMORY.md、SKILL.md | GC 压缩，不追加 |
+| 技能层 | 快 | skills/*/ | 版本化，随时替换 |
+| 状态层 | 极快 | progress.txt、daily log | 纯追加，定期清空 |
+
+### Immutable Code（不可变代码）
+借鉴 DevOps"不可变基础设施"——代码单元一旦编写不修改，直接丢弃替换。
+- 单元大小 ≤200 行（一页代码可理解）
+- 变更通过替换而非修改
+- SOUL.md 核心原则属于"不可变层"，改需走审计
+
+### Evaluations Are The Real Codebase
+自动化评估（测试、度量、不变性检查）才是真正的代码库。
+- harness 的 `validation.method` + `validation.command` 就是这个理念
+- 代码只是评估的一种实现
+- 评估结果（validation.log）是系统正确性的唯一证明

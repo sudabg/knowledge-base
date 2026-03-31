@@ -23,6 +23,14 @@
       "decision": "优先 Anthropic/OpenAI/Manus/HumanLayer 的一手文章，而非二手博客",
       "reason": "一手文章有实际数据和案例，二手博客常丢失关键细节",
       "outcome": "13 篇参考文献全部来自一手来源"
+    },
+    {
+      "id": "L-004",
+      "date": "2026-03-31",
+      "context": "凤凰架构（Phoenix Architecture）方法论分析",
+      "decision": "引入 Pace Layers 步层架构和 Immutable Code 不可变代码概念",
+      "reason": "当前 .harness 没有分层变更策略，所有变更同等对待。引入步层后，协议层极慢变更需审计，状态层纯追加可自动GC",
+      "outcome": "config.json 新增 paceLayers + immutableCode 配置；SKILL.md 新增补充概念章节"
     }
   ],
   "failures": [
