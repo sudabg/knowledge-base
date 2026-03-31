@@ -456,3 +456,16 @@ This is a starting point. Add your own conventions, style, and rules as you figu
 - **Skill = 可复用 harness 模式**: 每次成功执行后固化为 skill
 - **保留有用失败**: 失败尝试留在上下文，帮助避免重复
 - **文件系统记忆**: 不活跃信息写文件，不留在上下文窗口
+
+## 📊 Token 效率规则（来自 claude-token-efficient, MIT）
+
+**通用**：输出前问自己——这些字是否能直接被解析？
+- ✅ 结构化输出（JSON/bullets/table）
+- ❌ 叙述性输出（"Now I will..."）
+
+**代码审查**：State bug → Show fix → Stop。
+**调试**：读代码→找到问题→给出修复。一次通过。如果原因不明，说 "原因不明"。
+**分析**：结论先说，数据带单位，推断标注 "Based on..."
+**Agent 输出**：可解析、无解说、未知值返回 null。
+
+这些规则已集成到 COMMUNICATION.md，适用于所有输出。
