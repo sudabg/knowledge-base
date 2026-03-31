@@ -43,6 +43,9 @@ Harness Engineering 让 AI Agent 在长时间运行任务中保持一致性和�
 | 8 | **Spec-Driven** | 先规格后执行 | 任务开始前定义完成标准 |
 | 9 | **Budget Management** | 上下文是有限预算 | 文件系统记忆 + 有意识压缩 |
 | 10 | **Sandbox-First** | 安全执行环境优先 | 沙箱化执行 + 硬策略 |
+| 11 | **独立评估者** | 生成-评估解耦，对抗自评偏差 | sub-agent 评估 + 多维度评分 |
+| 12 | **Sprint 合同** | 编码前先提案验收标准 | 需求→合同→实现→验收 |
+| 13 | **组件必要性检验** | 每个组件都是可移除的假设 | 定期评估组件成本/收益 |
 
 ## Quick Reference
 
@@ -270,6 +273,123 @@ Harness Engineering 让 AI Agent 在长时间运行任务中保持一致性和�
 3. 外部通信: 需确认
 4. 删除/覆盖: 需确认 + 备份
 5. 系统配置: 需人工批准
+
+### Mode 11: 独立评估者（来自 Anthropic Generator-Evaluator 模式）
+
+**核心问题**：自评天然偏宽松。Agent 会"找到问题但自我说服不算大事"。
+
+**解决**：生成-评估解耦。产出者不是验证者。
+
+**在 OpenClaw 中的实现**：
+```
+主 Agent（Generator）: 做产出
+    ↓ 完成后
+sessions_spawn 隔离 session（Evaluator）: 
+    - 独立 prompt，带"挑剔倾向"
+    - 读取 Generator 的产出
+    - 按评分维度逐项检查
+    - 输出 PASS/FAIL + 具体问题
+    ↓ 
+主 Agent: 根据 Evaluator 结果决定修复或完成
+```
+
+**多维评分体系**：
+```json
+{
+  "scoring_dimensions": {
+    "correctness": {"weight": 0.3, "threshold": "must_pass"},
+    "completeness": {"weight": 0.25, "threshold": "must_pass"},
+    "consistency": {"weight": 0.2, "threshold": "should_pass"},
+    "elegance": {"weight": 0.15, "threshold": "nice_to_have"},
+    "performance": {"weight": 0.1, "threshold": "nice_to_have"}
+  }
+}
+```
+
+**人机校准循环**：
+1. Evaluator 输出评估日志
+2. 人审：哪些判断合理，哪些偏差
+3. 根据偏差调整 Evaluator 提示词
+4. 重复直到 Evaluator 判断"合理可信"
+
+**反模式**：
+- ❌ Generator 自评自己的产出
+- ❌ Evaluator 和 Generator 共享上下文
+- ❌ 只做二元 pass/fail，不分维度
+
+### Mode 12: Sprint 合同（来自 Anthropic Sprint Contract）
+
+**核心问题**：Spec-Driven 说了"先定义标准"，但没有"确认标准正确"的流程。
+
+**Sprint 合同机制**：
+```
+1. Generator 提案:
+   "本 sprint 做 X，验收标准是 Y，预计 Z 分钟"
+
+2. Evaluator/人 审核:
+   "验收标准 Y 是否覆盖了需求？"
+
+3. 确认后才开工:
+   "合同确认，开始 sprint"
+
+4. Sprint 完成后:
+   Evaluator 对照合同逐项验收
+```
+
+**在 OpenClaw 中的实现**：
+```json
+{
+  "sprint_contract": {
+    "sprint_id": "SPR-001",
+    "objective": "实现功能清单追踪 JSON 格式",
+    "acceptance_criteria": [
+      {"id": "AC-1", "description": "features.json 格式正确", "test": "python3 -c \"import json; json.load(open('features.json'))\""},
+      {"id": "AC-2", "description": "validation.method 必须存在", "test": "jq '.features[].validation.method' features.json"},
+      {"id": "AC-3", "description": "init.py 生成正确的文件", "test": "python3 init.py /tmp/test && ls /tmp/test/.harness/"}
+    ],
+    "estimated_duration": "15min",
+    "status": "proposed|confirmed|in_progress|completed|failed"
+  }
+}
+```
+
+**反模式**：
+- ❌ 边做边改验收标准
+- ❌ 验收标准太模糊（"代码能运行"）
+- ❌ 没有验收标准就开始 sprint
+
+### Mode 13: 组件必要性检验（来自 Anthropic 成本/质量矩阵）
+
+**核心问题**：每增加一个 harness 组件，都是在编码一个"模型做不到的假设"。模型升级后，假设可能不再成立。
+
+**检验机制**：
+```
+定期（模型升级时 / 每月）检查:
+1. 列出所有 harness 组件
+2. 对每个组件问：当前模型还需要这个吗？
+3. 如果答案是"不确定"→ 做 A/B 测试
+4. 移除不需要的组件，降低成本和复杂度
+```
+
+**成本/时间/质量决策矩阵**：
+```json
+{
+  "component_evaluation": {
+    "component": "独立评估者 (Mode 11)",
+    "cost_increase": "+30% token",
+    "time_increase": "+50% duration",
+    "quality_increase": "+20% (catches self-eval bias)",
+    "decision": "keep_when_model_is_weak",
+    "simplify_when": "model_quality_score > 0.9"
+  }
+}
+```
+
+**在 OpenClaw 中的实践**：
+- 模型升级后：测试各组件是否仍"承重"
+- 简单任务：跳过评估者，直接自评
+- 复杂任务：启用完整评估流程
+- 记录每次 A/B 对比结果到 `.harness/lessons.json`
 
 ## Incremental Progress Workflow
 

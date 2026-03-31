@@ -430,9 +430,9 @@ If any of the following happen, decline in the current conversation and notify t
 
 This is a starting point. Add your own conventions, style, and rules as you figure out what works.
 
-## 🏗️ Harness Engineering 十大模式（2026-03-31）
+## 🏗️ Harness Engineering 十三模式（2026-03-31）
 
-来自 88 篇顶级资源（OpenAI/Anthropic/LangChain/Manus/HumanLayer/Thoughtworks）的提炼。参考：Phoenix Architecture 步层架构。
+来自 88 篇顶级资源（OpenAI/Anthropic/LangChain/Manus/HumanLayer/Thoughtworks）+ Phoenix Architecture + Anthropic Generator-Evaluator 模式的提炼。
 
 ### 核心模式速查
 1. **初始化标准化** — 每次会话从一致状态开始
@@ -445,6 +445,9 @@ This is a starting point. Add your own conventions, style, and rules as you figu
 8. **Spec-Driven** — 先定义完成标准，再执行
 9. **Budget Management** — 上下文是有限预算，不是垃圾桶
 10. **Sandbox-First** — 安全执行环境优先
+11. **独立评估者** — 生成-评估解耦，用 sub-agent 对抗自评偏差
+12. **Sprint 合同** — 编码前先提案验收标准，确认后才开工
+13. **组件必要性检验** — 每个 harness 组件都是可移除的假设
 
 ### 应用原则
 - **Simple > Complex**: 最成功 agent 用简单组合模式

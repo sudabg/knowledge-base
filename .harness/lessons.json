@@ -31,6 +31,14 @@
       "decision": "引入 Pace Layers 步层架构和 Immutable Code 不可变代码概念",
       "reason": "当前 .harness 没有分层变更策略，所有变更同等对待。引入步层后，协议层极慢变更需审计，状态层纯追加可自动GC",
       "outcome": "config.json 新增 paceLayers + immutableCode 配置；SKILL.md 新增补充概念章节"
+    },
+    {
+      "id": "L-005",
+      "date": "2026-03-31",
+      "context": "Anthropic Generator-Evaluator 方法论分析",
+      "decision": "新增3个模式：独立评估者(Mode 11)、Sprint合同(Mode 12)、组件必要性检验(Mode 13)",
+      "reason": "自评天然偏宽松→需独立评估者; Spec-Driven太抽象→需Sprint合同; 每个组件都是假设→需定期检验",
+      "outcome": "10模式→13模式，SKILL.md/AGENTS.md/SOUL.md全部更新"
     }
   ],
   "failures": [
