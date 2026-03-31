@@ -46,6 +46,7 @@ Harness Engineering 让 AI Agent 在长时间运行任务中保持一致性和�
 | 11 | **独立评估者** | 生成-评估解耦，对抗自评偏差 | sub-agent 评估 + 多维度评分 |
 | 12 | **Sprint 合同** | 编码前先提案验收标准 | 需求→合同→实现→验收 |
 | 13 | **组件必要性检验** | 每个组件都是可移除的假设 | 定期评估组件成本/收益 |
+| 14 | **Harness Skill Bank** | 双粒度技能库 + 效用跟踪 + 动态修剪 | maintenance.py store/query/prune |
 
 ## Quick Reference
 
@@ -273,6 +274,58 @@ Harness Engineering 让 AI Agent 在长时间运行任务中保持一致性和�
 3. 外部通信: 需确认
 4. 删除/覆盖: 需确认 + 备份
 5. 系统配置: 需人工批准
+
+### Mode 14: Harness Skill Bank（来自 D2Skill 双粒度技能库）
+
+**核心问题**：agent 的可复用经验散落在日志里，找不到也用不上。每次新任务从零开始。
+
+**D2Skill 映射**：
+| D2Skill 概念 | Harness 对应 |
+|---|---|
+| Task skills (高层指导) | 模式级技能：拆分任务、写规格、独立评估 |
+| Step skills (细粒度) | 命令级技能：curl验证、grep一致性、git commit |
+| Paired rollout + utility | 使用后更新 utility_score |
+| Dynamic pruning | 定期修剪 utility < 阈值的技能 |
+| Reflection expansion | 从 lessons.json 反射式提取新技能 |
+
+**数据结构 (skills.jsonl)**:
+```json
+{
+  "skill_id": "sk_xxxxxxxxxxxx",
+  "granularity": "task|step",
+  "signals": ["关键词1", "关键词2"],
+  "action": "具体怎么做的",
+  "outcome": "效果如何",
+  "utility_score": 0.85,
+  "use_count": 10,
+  "success_count": 9,
+  "source_ref": "来源",
+  "created": "ISO8601",
+  "last_used": "ISO8601"
+}
+```
+
+**操作**：
+```bash
+# 查看技能库
+python3 .harness/skill-bank/maintenance.py stats
+
+# 查询匹配任务的技能
+python3 .harness/skill-bank/maintenance.py query "验证API接口"
+
+# 从 lessons 反射式扩展
+python3 .harness/skill-bank/maintenance.py reflect
+
+# 修剪低效技能
+python3 .harness/skill-bank/maintenance.py prune
+```
+
+**关键规则**：
+- 每个完成的任务自动提炼技能并存储
+- utility_score 随使用更新：成功 +0.1，失败 -0.15
+- 连续7天未使用自动衰减 0.95^n
+- utility < 0.3 且 use_count > 0 → 自动修剪
+- 最大容量 100 个技能
 
 ### Mode 11: 独立评估者（来自 Anthropic Generator-Evaluator 模式）
 

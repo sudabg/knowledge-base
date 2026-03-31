@@ -147,3 +147,4 @@ _This file is yours to evolve. As you learn who you are, update it._
 - **独立评估者** — 生成-评估解耦，用隔离 sub-agent 对抗自评偏差（不自己检查自己的工作）
 - **Sprint 合同** — 编码前先提案验收标准（需求→合同→实现→验收）
 - **组件必要性检验** — 定期检验每个 harness 组件是否仍需要，模型升级时逐个移除验证
+- **Harness Skill Bank** — 从每次成功经验中自动提取可复用技能，低效技能自动修剪

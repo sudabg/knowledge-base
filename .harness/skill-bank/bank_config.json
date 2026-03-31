@@ -1,0 +1,16 @@
+{
+  "max_skills": 100,
+  "min_utility_threshold": 0.3,
+  "utility_decay_rate": 0.95,
+  "prune_frequency_days": 7,
+  "granularity_levels": {
+    "task": {
+      "description": "\u9ad8\u5c42\u6a21\u5f0f \u2014 \u77e5\u9053\u505a\u4ec0\u4e48\uff08\u6218\u7565\u5c42\uff09",
+      "example": "\u590d\u6742\u4efb\u52a1\u62c6\u5206\u6210\u5b50\u4efb\u52a1\uff0c\u6bcf\u4e2a\u5b50\u4efb\u52a1\u6709\u9a8c\u6536\u6807\u51c6"
+    },
+    "step": {
+      "description": "\u7ec6\u7c92\u5ea6\u6a21\u5f0f \u2014 \u77e5\u9053\u600e\u4e48\u505a\uff08\u6218\u672f\u5c42\uff09",
+      "example": "\u9a8c\u8bc1 API \u54cd\u5e94\u65f6\uff0c\u5148\u68c0\u67e5 status code\uff0c\u518d\u68c0\u67e5 body \u5b57\u6bb5"
+    }
+  }
+}

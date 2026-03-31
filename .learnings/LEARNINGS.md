@@ -1985,3 +1985,19 @@ Free tier 在北京时间 09:00-15:00 持续限流。昨天连续 9 次 server_b
 
 
 
+
+## 2026-03-31 — D2Skill Agent RL Skill Bank
+
+**论文**: arXiv:2603.28716 "Dynamic Dual-Granularity Skill Bank for Agentic RL"
+**核心洞察**: 
+- 可复用经验应组织为双粒度：任务技能(高层)+步骤技能(细粒度)
+- Paired rollout对比获取hindsight utility信号（类似GAN discriminator）
+- 动态技能维护：utility-aware retrieval + pruning
+
+**映射到Harness**:
+- 任务技能 ↔ Mode 1-10中的高层模式
+- 步骤技能 ↔ 验证命令/评分维度
+- Paired rollout ↔ Mode 11独立评估者
+- 技能修剪 ↔ Mode 13组件必要性检验
+
+**结果**: auto_promoted, bundle_c26b87e1b9611838

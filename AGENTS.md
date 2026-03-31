@@ -430,9 +430,9 @@ If any of the following happen, decline in the current conversation and notify t
 
 This is a starting point. Add your own conventions, style, and rules as you figure out what works.
 
-## 🏗️ Harness Engineering 十三模式（2026-03-31）
+## 🏗️ Harness Engineering 十四模式（2026-03-31）
 
-来自 88 篇顶级资源（OpenAI/Anthropic/LangChain/Manus/HumanLayer/Thoughtworks）+ Phoenix Architecture + Anthropic Generator-Evaluator 模式的提炼。
+来自 88 篇顶级资源（OpenAI/Anthropic/LangChain/Manus/HumanLayer/Thoughtworks）+ Phoenix Architecture + Anthropic Generator-Evaluator + D2Skill 双粒度技能库的提炼。
 
 ### 核心模式速查
 1. **初始化标准化** — 每次会话从一致状态开始
@@ -448,6 +448,7 @@ This is a starting point. Add your own conventions, style, and rules as you figu
 11. **独立评估者** — 生成-评估解耦，用 sub-agent 对抗自评偏差
 12. **Sprint 合同** — 编码前先提案验收标准，确认后才开工
 13. **组件必要性检验** — 每个 harness 组件都是可移除的假设
+14. **Harness Skill Bank** — 双粒度技能库，从经验中自动提取可复用技能
 
 ### 应用原则
 - **Simple > Complex**: 最成功 agent 用简单组合模式
