@@ -1,0 +1,15 @@
+052d5da891bc26baab3ce4cbf8216893  skills/.archived-by-audit-2026-04-01/marketing-plan/SKILL.md
+67838e6b590758841a53b0d4969e6142  skills/.archived-by-audit-2026-04-01/minimalist-review/SKILL.md
+7ad1432af07d7c93e05e75f8d86fe496  skills/.archived-by-audit-2026-04-01/processize/SKILL.md
+81daabb42fe9135ebc77f93f8caff33a  skills/.archived-by-audit-2026-04-01/metacognition/README.md
+a3426d1f7def62f37b7a0cc31180a882  skills/.archived-by-audit-2026-04-01/first-customers/SKILL.md
+b46772ce3333c5cd5ea3d672ac823cc2  skills/.archived-by-audit-2026-04-01/gan-evolution-engine/SKILL.md
+bf153fccfdf1a23e81947313b395aaf0  skills/.archived-by-audit-2026-04-01/gan-evolution-engine/README.md
+c20c632dadb29ff702881dba25ad49e3  skills/.archived-by-audit-2026-04-01/jpeng-knowledge-graph-memory/SKILL.md
+c3f531d9b46a3aaaf08a748a2dc2d3c7  skills/.archived-by-audit-2026-04-01/metacognition/SKILL.md
+d6f9531969621b471d496fbde48b69d9  skills/.archived-by-audit-2026-04-01/company-values/SKILL.md
+da2eb7f130f2ba7bfec9de25fe325c36  skills/.archived-by-audit-2026-04-01/mvp/SKILL.md
+dbfa7fa085a476de8124885c48073ea6  skills/.archived-by-audit-2026-04-01/pricing/SKILL.md
+e15c4e79a3b9f1be3ca791e86e55dfa0  skills/.archived-by-audit-2026-04-01/find-community/SKILL.md
+ef13441e1497a8ad5bd03594cfdcabed  skills/.archived-by-audit-2026-04-01/validate-idea/SKILL.md
+fb9e7fe9d72cb186bb5f405293d97bae  skills/.archived-by-audit-2026-04-01/grow-sustainably/SKILL.md

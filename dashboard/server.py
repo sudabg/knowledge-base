@@ -368,7 +368,7 @@ class DashboardHandler(SimpleHTTPRequestHandler):
 
             # Match time headers: ## HH:MM title, ### HH:MM title, or ## Title (HH:MM)
             time_match = re.match(r'^#{2,3}\s+(\d{1,2}:\d{2})\s+(.+)$', t)
-            paren_match = re.match(r'^#{2,3}\s+(.+)\s*\((\d{1,2}:\d{2})\)\s*$', t)
+            paren_match = re.match(r'^#{2,3}\s+(.+?)\s*[（(](\d{1,2}:\d{2})\s*[）)]\s*$', t)
             if time_match:
                 if current_group and current_items:
                     groups.append({**current_group, 'items': current_items})

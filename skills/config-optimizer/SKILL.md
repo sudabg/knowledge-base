@@ -3,7 +3,7 @@ name: config-optimizer
 description: "Workspace配置文件优化器。反思工作效果，微调SOUL.md同级目录下的配置文件以提升Agent表现。Use when: (1) 定时反思工作质量, (2) 配置文件需要优化, (3) Agent行为需要调整, (4) 用户反馈表现不理想。"
 metadata:
   openclaw:
-    requires: { bins: ["node"] }
+    requires: { bins: [] }
 ---
 
 # Config Optimizer
@@ -26,6 +26,9 @@ metadata:
 - `.learnings/ERRORS.md` — 最近的错误
 - `.learnings/LEARNINGS.md` — 最近的学习
 - `memory/heartbeat-state.json` — 心跳状态（如有）
+- **任务质量追踪表**（Bitable）— 查看近期任务质量趋势、沉淀率
+  - app_token: `EhO5bv8DaacE9osvOeac2BVZnid`, table_id: `tblYeRqS6e2sZ2Qj`
+  - 用 `feishu_bitable_app_table_record` action=list 筛选最近记录
 
 评估维度：
 - **效率**：是否有重复操作、不必要的等待、可以自动化的任务？
@@ -86,6 +89,29 @@ metadata:
 | 响应延迟 | <5s | >30s |
 | 用户追问次数 | <2 | >4 |
 | 学习记录更新 | 每天 | 超过2天没更新 |
+
+## 常见反思模式（经验库）
+
+### 模式A：创建类任务的质量控制
+- **症状**：首次执行不按需求对照，凭感觉操作→结果混乱
+- **修复**：创建前先列checklist（需求→字段→类型），每步验证，最后自检
+- **适用**：Bitable创建、文档生成、配置修改等
+
+### 模式B：消息时序混乱
+- **症状**：旧消息（如"需要确认"）在新上下文到达后仍被发出
+- **修复**：收到新上下文后，取消排队的旧追问，直接基于新内容响应
+- **规则**：新消息 = 新指令，旧的作废
+
+### 模式C：Skill/工具搜索缺失
+- **症状**：面对"找不到"直接放弃或说"没有这个功能"
+- **修复**：第一步是 `skillhub search` → `clawhub search` → 网搜
+- **规则**：说"找不到"之前，必须先搜过至少两个源
+
+### 模式D：路径依赖
+- **症状**：只用已知方法，从未考虑替代方案
+- **修复**：遇到卡点时，强制搜索3个替代工具再决定
+- **适用**：token缺失、API限流、权限不足
+- **~~⚠️ 关联**：troubleshooting-flow skill 已归档（2026-04-01 审计，与 dev-rigor 功能重叠），本段仅保留说明
 
 ## 示例输出
 

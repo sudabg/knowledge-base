@@ -1,0 +1,157 @@
+{
+  "user_id": "一条明",
+  "created_at": "2026-03-31T06:18:40.644509",
+  "last_updated": "2026-03-31T06:19:00.238895",
+  "preferences": {
+    "communication_style": {
+      "preferred_language": "zh",
+      "response_style": "detailed",
+      "emoji_usage": "moderate",
+      "format_preference": "structured"
+    },
+    "topics_of_interest": [
+      "EvoMap",
+      "GitHub",
+      "飞书",
+      "博客",
+      "技术",
+      "学习",
+      "项目",
+      "部署"
+    ],
+    "tools_used": [],
+    "time_patterns": {
+      "active_hours": [],
+      "preferred_meeting_times": []
+    }
+  },
+  "work_patterns": {
+    "common_tasks": [],
+    "project_focus": [],
+    "decision_style": "data_driven"
+  },
+  "learning_style": {
+    "prefers_examples": true,
+    "prefers_explanations": true,
+    "prefers_visuals": false,
+    "attention_span": "medium"
+  },
+  "feedback_history": {
+    "positive_signals": [
+      {
+        "timestamp": "2026-03-31T06:18:40.644560",
+        "context": "EvoMap, GitHub, 飞书, 博客, 技术, 学习, 项目, 部署"
+      },
+      {
+        "timestamp": "2026-03-31T06:18:40.644845",
+        "context": "EvoMap, GitHub, 飞书, 博客, 技术, 学习, 项目, 部署"
+      },
+      {
+        "timestamp": "2026-03-31T06:18:40.645200",
+        "context": "EvoMap, GitHub, 飞书, 博客, 技术, 学习, 项目, 部署"
+      },
+      {
+        "timestamp": "2026-03-31T06:18:40.645507",
+        "context": "EvoMap, GitHub, 博客, 技术, 学习, 项目"
+      },
+      {
+        "timestamp": "2026-03-31T06:18:40.645881",
+        "context": "EvoMap, GitHub, 飞书, 博客, 技术, 学习, 项目, 部署"
+      },
+      {
+        "timestamp": "2026-03-31T06:18:40.646266",
+        "context": "EvoMap, GitHub, 飞书, 博客, 技术, 学习, 项目, 部署"
+      },
+      {
+        "timestamp": "2026-03-31T06:19:00.237216",
+        "context": "EvoMap, GitHub, 飞书, 博客, 技术, 学习, 项目, 部署"
+      },
+      {
+        "timestamp": "2026-03-31T06:19:00.237500",
+        "context": "EvoMap, GitHub, 飞书, 博客, 技术, 学习, 项目, 部署"
+      },
+      {
+        "timestamp": "2026-03-31T06:19:00.237871",
+        "context": "EvoMap, GitHub, 飞书, 博客, 技术, 学习, 项目, 部署"
+      },
+      {
+        "timestamp": "2026-03-31T06:19:00.238111",
+        "context": "EvoMap, GitHub, 博客, 技术, 学习, 项目"
+      },
+      {
+        "timestamp": "2026-03-31T06:19:00.238445",
+        "context": "EvoMap, GitHub, 飞书, 博客, 技术, 学习, 项目, 部署"
+      },
+      {
+        "timestamp": "2026-03-31T06:19:00.238903",
+        "context": "EvoMap, GitHub, 飞书, 博客, 技术, 学习, 项目, 部署"
+      }
+    ],
+    "negative_signals": [
+      {
+        "timestamp": "2026-03-31T06:18:40.644563",
+        "context": "EvoMap, GitHub, 飞书, 博客, 技术, 学习, 项目, 部署"
+      },
+      {
+        "timestamp": "2026-03-31T06:18:40.644847",
+        "context": "EvoMap, GitHub, 飞书, 博客, 技术, 学习, 项目, 部署"
+      },
+      {
+        "timestamp": "2026-03-31T06:18:40.645203",
+        "context": "EvoMap, GitHub, 飞书, 博客, 技术, 学习, 项目, 部署"
+      },
+      {
+        "timestamp": "2026-03-31T06:18:40.645509",
+        "context": "EvoMap, GitHub, 博客, 技术, 学习, 项目"
+      },
+      {
+        "timestamp": "2026-03-31T06:18:40.645883",
+        "context": "EvoMap, GitHub, 飞书, 博客, 技术, 学习, 项目, 部署"
+      },
+      {
+        "timestamp": "2026-03-31T06:18:40.646268",
+        "context": "EvoMap, GitHub, 飞书, 博客, 技术, 学习, 项目, 部署"
+      },
+      {
+        "timestamp": "2026-03-31T06:19:00.237219",
+        "context": "EvoMap, GitHub, 飞书, 博客, 技术, 学习, 项目, 部署"
+      },
+      {
+        "timestamp": "2026-03-31T06:19:00.237503",
+        "context": "EvoMap, GitHub, 飞书, 博客, 技术, 学习, 项目, 部署"
+      },
+      {
+        "timestamp": "2026-03-31T06:19:00.237873",
+        "context": "EvoMap, GitHub, 飞书, 博客, 技术, 学习, 项目, 部署"
+      },
+      {
+        "timestamp": "2026-03-31T06:19:00.238113",
+        "context": "EvoMap, GitHub, 博客, 技术, 学习, 项目"
+      },
+      {
+        "timestamp": "2026-03-31T06:19:00.238448",
+        "context": "EvoMap, GitHub, 飞书, 博客, 技术, 学习, 项目, 部署"
+      },
+      {
+        "timestamp": "2026-03-31T06:19:00.238905",
+        "context": "EvoMap, GitHub, 飞书, 博客, 技术, 学习, 项目, 部署"
+      }
+    ],
+    "suggestions": []
+  },
+  "interaction_stats": {
+    "total_conversations": 0,
+    "total_messages": 0,
+    "avg_response_length": 0,
+    "topics_frequency": {
+      "EvoMap": 12,
+      "GitHub": 12,
+      "飞书": 10,
+      "博客": 12,
+      "技术": 12,
+      "学习": 12,
+      "项目": 12,
+      "部署": 10
+    }
+  }
+}

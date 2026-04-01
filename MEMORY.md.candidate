@@ -1,0 +1,14 @@
+# MEMORY.md — Memory Router (≤15 lines always injected)
+
+## Always Load (≤10s)
+- Owner: 一条明 | Platform: OpenClaw+VeFaaS 无状态容器 | No root
+- 长期目标: 1000粉丝/¥1000/1000⭐ → 查 `memory/long-term-goals.md`
+- 铁律: 即时执行不延后 | 监控优先 | 平台单点=天花板
+
+## Today
+- 大盘 9/9 OK | 变更详见 `memory/2026-MM-DD.md`
+
+## Escalate On
+- REDLINE triggered → P0 告警 + 飞书
+- Archive/Cron tamper → 立即通知
+- 详见 `CHANGELOG.md` 验证规则

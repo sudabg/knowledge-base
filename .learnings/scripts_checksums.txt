@@ -1,0 +1,14 @@
+076b073287e45397292a4cf90c7add28  scripts/procrastination-check.py
+61f31f80fbcb6c39b64489a93e989429  scripts/dependency-check.py
+66a30f29ea543b6d9d90c3f41da216bf  scripts/unified-dashboard-check.py
+6b08c053dc33723dc922aef5365c097d  scripts/p0-alert-tracker.py
+7f78f53876dec40fc2f07f9adf43da44  scripts/verify.sh
+8a80e21af74b46f05ebf56671d44f6d3  scripts/audit-skills.sh
+b626bed768674849fb8aff51e9827144  scripts/memory-compaction-check.sh
+d16ddc96e825749ef969c378b7856ea1  scripts/daily-summary.sh
+e3c60195ffe6ffad0dfb8899aa7b5f5e  scripts/skill_router.py
+ffbaa62f1173570b47c01168d1b59fcc  scripts/preflight.py
+33ad9690af9b55c3ba8851bcf36815ea  scripts/redline-monitor.py
+cc2252d7b25df2c6015cdc69f7a6db21  scripts/resource-to-ticket.py
+3e8bbfb3ab3bc940773ed311f3ccc8b1  scripts/resource-scout-auto-ticket.sh
+49350ed699cfbf000971ea6f6870b23f  scripts/internal-trap-detect.py

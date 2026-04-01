@@ -21,3 +21,9 @@
 - P.md 健康监控期望值与实际不符（已知问题）
 
 *更新时间: 2026-03-29T05:48*
+
+## 🔄 每日沉淀机制（2026-03-30 新增）
+- **指令来源**: 一条明
+- **规则**: 每天回顾完成任务，质量合格→SOP→Skill化
+- **已沉淀**: troubleshooting-flow, evomap-fault-diagnosis, config-optimizer增强
+- **流程**: daily.md筛选 → 提炼SOP → 创建skills/ → 记录日志

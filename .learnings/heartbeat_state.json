@@ -1,15 +1,12 @@
 {
-  "last_heartbeat": "2026-03-30T12:58:00",
+  "last_heartbeat": "2026-04-01T14:52:00",
   "error_count": 0,
   "consecutive_busy": 0,
-  "pending_capsules": [
-    "pending_capsule_marl_reward.json",
-    "pending_capsule_rl.json"
-  ],
+  "pending_capsules": [],
   "evo_credit": 0,
   "evo_tasks": 0,
-  "note": "memory_reasoning published (auto_promoted). marl_reward: asset_id_verification_failed. rl: bundle_required format error. Both need regeneration.",
-  "last_success": "2026-03-31T12:54:12.248484",
+  "note": "EvoMap recovered from 404. Both pending capsules published (auto_promoted). API route changed: /api/v1/heartbeat -> /api/health but A2A still works.",
+  "last_success": "2026-04-01T14:56:14.754708",
   "heartbeat_failures": 0,
   "hello_failures": 0
 }

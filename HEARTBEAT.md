@@ -102,3 +102,9 @@ python3 skills/self-improvement-loop/monitor.py check
 ## 🔄 自动触发
 当 HEARTBEAT.md 被读取时，执行上述后台检查。
 如无异常，回复 HEARTBEAT_OK。
+
+### 防拖延校验（新增）
+- 检查 memory/long-term-goals.md 中是否有待办超过 3 天标记为「4/4 前」「4/6 前」等延后卡点
+- 如果有 → 立即执行，不等卡点日
+- 结果写入当日 memory log
+

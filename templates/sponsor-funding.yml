@@ -1,0 +1,17 @@
+# FUNDING.yml 模板
+# 用法: 复制此文件到目标仓库的 .github/FUNDING.yml
+# 注意: 修改 sudabg 为你实际的 GitHub 用户名
+
+github: sudabg
+
+# 可选的其他平台（取消注释并填入链接）:
+# ko_fi: your_kofi_username
+# tidelift: "npm/your-package"
+# community_bridge: your-project-name
+# liberapay: your_liberapay_username
+# issuehunt: your_issuehunt_username
+# lfx_crowdfunding: your-lfx-project
+# polar: your_polar_username
+# buy_me_a_coffee: your_bmac_username
+# custom:
+#   - "https://afdian.com/a/sudabg"  # 爱发电

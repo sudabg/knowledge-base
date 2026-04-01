@@ -1,0 +1,64 @@
+{
+  "timestamp": "2026-04-02T00:56:37.863721",
+  "checks": [
+    {
+      "check": "dependency-map",
+      "status": "OK",
+      "detail": "OK, issues: 0"
+    },
+    {
+      "check": "archive-snapshot",
+      "status": "OK",
+      "detail": "OK"
+    },
+    {
+      "check": "memory-size",
+      "status": "OK",
+      "detail": "OK (47/60)"
+    },
+    {
+      "check": "cron-config",
+      "status": "OK",
+      "detail": "OK (4 jobs protected)"
+    },
+    {
+      "check": "scripts-exist",
+      "status": "OK",
+      "detail": "OK (5 scripts verified)"
+    },
+    {
+      "check": "changelog-stale",
+      "status": "OK",
+      "detail": "4 pending, 3 verified"
+    },
+    {
+      "check": "alert-escalation",
+      "status": "OK",
+      "detail": "OK"
+    },
+    {
+      "check": "cron-integrity",
+      "status": "OK",
+      "detail": "OK (4 jobs verified)"
+    },
+    {
+      "check": "redlines",
+      "status": "OK",
+      "detail": "OK (3 redlines intact)"
+    },
+    {
+      "check": "cold-backup",
+      "status": "OK",
+      "detail": "OK (backup from 0 days ago)"
+    },
+    {
+      "check": "evolution-kpis",
+      "status": "OK",
+      "detail": [
+        "DISCOVERED=0 TICKETS=4 DONE=1 RATE=25%",
+        []
+      ]
+    }
+  ],
+  "overall": "OK"
+}

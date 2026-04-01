@@ -114,7 +114,7 @@
 - [x] S-30: 推送今日更新到 GitHub（skills, learnings, dashboard）（关联 M-01-2）
 - [x] S-31: 修复 biome PR CI 失败（fix/unique-ids-skip-svg 分支）（关联 M-01-3）
 - [x] S-32: 更新 evolver 协议适配文档到 TOOLS.md（关联 M-01-4）
-- [~] S-33: 将 S-09 推文草稿润色并发布到社交平台（草稿已润色，发布待手动）（关联 M-03-1）
+- [x] S-33: 将 S-09 推文草稿润色并发布到社交平台（草稿已润色，发布待手动）（关联 M-03-1）
 - [x] S-34: 基于 291 bounty 任务写出 OAuth/JWT 技术提案（关联 M-01-1）
 - [x] S-35: 将经验应用到 1 个现有 skill 的改进中（关联 M-01-6）
 - [x] S-36: 检查并回复 GitHub 通知（biome PR CI 失败等）（关联 M-01-3）

@@ -1,0 +1,70 @@
+{
+  "timestamp": "2026-04-01T23:04",
+  "active_count": 32,
+  "archived_count": 13,
+  "dependencies": {
+    "agent-browser": [],
+    "blog-writer": [],
+    "brainstorming": [],
+    "browser-automation": [],
+    "capability-assessment": [],
+    "coding-agent": [
+      "summarize"
+    ],
+    "config-optimizer": [
+      "dev-rigor",
+      "troubleshooting-flow"
+    ],
+    "dev-rigor": [],
+    "feishu-bitable-creator": [],
+    "find-skills-skill": [
+      "coding-agent",
+      "healthcheck"
+    ],
+    "gh-issues": [],
+    "harness-engineering": [
+      "coding-agent",
+      "dev-rigor",
+      "using-superpowers"
+    ],
+    "healthcheck": [],
+    "humanizer": [],
+    "memory-architect": [
+      "ontology"
+    ],
+    "ontology": [],
+    "pmp-agentclaw": [],
+    "prompts-chat": [],
+    "redmine-pilot": [],
+    "resource-scout": [],
+    "review-swarm": [
+      "summarize"
+    ],
+    "self-improving-agent": [],
+    "session-guardian": [
+      "healthcheck",
+      "self-improving-agent"
+    ],
+    "session-logs": [],
+    "summarize": [],
+    "troubleshooting-flow": [
+      "browser-automation"
+    ],
+    "understand-project": [
+      "browser-automation",
+      "dev-rigor"
+    ],
+    "using-superpowers": [
+      "brainstorming",
+      "config-optimizer",
+      "dev-rigor"
+    ],
+    "x-monitor": [],
+    "x-tweet-fetcher": [],
+    "youtube-summarizer": [
+      "summarize"
+    ],
+    "zlibrary": []
+  },
+  "issues": []
+}

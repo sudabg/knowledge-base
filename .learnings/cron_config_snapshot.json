@@ -1,0 +1,22 @@
+{
+  "独立兜底巡检": {
+    "enabled": true,
+    "schedule": "every 6h",
+    "sessionTarget": "isolated"
+  },
+  "task-executor": {
+    "enabled": true,
+    "schedule": "every 1h",
+    "sessionTarget": "isolated"
+  },
+  "Resource Scout - 6h": {
+    "enabled": true,
+    "schedule": "every 6h",
+    "sessionTarget": "isolated"
+  },
+  "Dashboard 健康检查": {
+    "enabled": true,
+    "schedule": "daily 01:00",
+    "sessionTarget": "isolated"
+  }
+}
