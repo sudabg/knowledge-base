@@ -1,0 +1,19 @@
+{
+  "version": "2026-04-02",
+  "strategy": "逐技能深度挖掘 → 记录玩法 → 技能重组 → 循环迭代",
+  "priority_skills": [
+    "feishu-bitable-creator",
+    "blog-writer", 
+    "x-tweet-fetcher",
+    "agent-browser",
+    "capability-assessment",
+    "resource-scout",
+    "gh-issues",
+    "youtube-summarizer",
+    "session-guardian",
+    "summarize"
+  ],
+  "completed": [],
+  "current": "feishu-bitable-creator",
+  "next": null
+}

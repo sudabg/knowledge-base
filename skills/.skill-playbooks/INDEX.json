@@ -1,0 +1,22 @@
+{
+  "total_skills": 15,
+  "total_plays": 243,
+  "skills": {
+    "gh-issues": 16,
+    "x-tweet-fetcher": 16,
+    "youtube-summarizer": 16,
+    "x-monitor": 16,
+    "blog-writer": 17,
+    "feishu-bitable-creator": 17,
+    "summarize": 16,
+    "agent-browser": 17,
+    "self-improving-agent": 16,
+    "coding-agent": 16,
+    "capability-assessment": 16,
+    "find-skills-skill": 16,
+    "dev-rigor": 16,
+    "resource-scout": 16,
+    "browser-automation": 16
+  },
+  "updated": "2026-04-02T02:19:56.666302"
+}
